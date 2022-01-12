@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import java.util.function.DoubleSupplier;
 
-public class TeleopDrive extends CommandBase {
+public class TeleopDriveCommand extends CommandBase {
     private final DriveBaseSubsystem m_drivetrain;
     private final DoubleSupplier m_throttle;
     private final DoubleSupplier m_turn;
@@ -14,7 +14,8 @@ public class TeleopDrive extends CommandBase {
     *
     * @param subsystem The subsystem used by this command.
     */
-    public TeleopDrive(DriveBaseSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier turn) {
+    public TeleopDriveCommand(
+            DriveBaseSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier turn) {
         m_drivetrain = subsystem;
         m_throttle = throttle;
         m_turn = turn;
