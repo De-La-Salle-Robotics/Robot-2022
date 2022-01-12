@@ -3,6 +3,7 @@ package frc.robot.wrappers;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
+/** Wrapper class to provide reasonable values for TalonFX */
 public class PilotFX extends WPI_TalonFX {
 
     public PilotFX(int deviceNumber) {

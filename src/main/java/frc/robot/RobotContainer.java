@@ -4,11 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TaxiAutoCommand;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 /**
@@ -18,14 +17,17 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 * subsystems, commands, and button mappings) should be declared here.
 */
 public class RobotContainer {
+    /* Controllers are created here */
     private final XboxController m_driverController =
             new XboxController(Constants.Driver_Controller_Port);
 
+    /* Subsystems are created here */
     private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
 
+    /* Commands are created here */
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
-    private final TeleopDrive m_teleopDrive =
-            new TeleopDrive(
+    private final TeleopDriveCommand m_teleopDrive =
+            new TeleopDriveCommand(
                     m_driveBaseSubsystem, m_driverController::getLeftY, m_driverController::getRightX);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -36,12 +38,6 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    /**
-    * Use this method to define your button->command mappings. Buttons can be created by
-    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-    */
     private void configureButtonBindings() {}
 
     /**

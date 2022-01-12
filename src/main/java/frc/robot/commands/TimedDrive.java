@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 public class TimedDrive extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final DriveBaseSubsystem m_drivetrain;
 
     private final Timer m_timer = new Timer();
