@@ -21,4 +21,11 @@ public final class Constants {
     public static final int Pigeon_ID = 0;
 
     public static final int Driver_Controller_Port = 0;
+
+    /* Distance between left wheels and right wheels in inches */
+    public static final double Robot_Width = 18.0;
+    /* Radius of drive wheels in inches */
+    public static final double Wheel_Radius = 1.0;
+    /* Gearing of drivetrain*/
+    public static final double Drivetrain_Gearing = 1.0 / 7.8;
 }

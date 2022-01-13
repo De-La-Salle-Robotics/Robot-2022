@@ -12,6 +12,8 @@ public class TaxiAutoCommand extends SequentialCommandGroup {
     public TaxiAutoCommand(DriveBaseSubsystem driveBaseSubsystem) {
         addCommands(
                 /* Drive straight at half power for 1 second */
-                new TimedDrive(driveBaseSubsystem, 0.5, 0, 1.0));
+                new TimedDrive(driveBaseSubsystem, 0.5, 0, 1.0)
+                /* If there's any more add them here */
+                );
     }
 }

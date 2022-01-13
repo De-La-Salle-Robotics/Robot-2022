@@ -5,6 +5,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 
 /** Wrapper class to provide reasonable values for TalonFX */
 public class PilotFX extends WPI_TalonFX {
+    public static final double kUnitsPerRotation = 2048.0; // 2048 units per rotation
+    public static final double k100msPerMinute = 600.0; // 10 100ms per second, 60 seconds per minute
 
     public PilotFX(int deviceNumber) {
         super(deviceNumber);
@@ -15,19 +17,19 @@ public class PilotFX extends WPI_TalonFX {
     }
 
     public static double toRotations(double rawUnits) {
-        return rawUnits / 4096.0;
+        return rawUnits / kUnitsPerRotation;
     }
 
     public static double toRawUnits(double rotations) {
-        return rotations * 4096.0;
+        return rotations * kUnitsPerRotation;
     }
 
     public static double toRPM(double rawVelUnits) {
-        return rawVelUnits * 600.0 / 4096.0;
+        return rawVelUnits * k100msPerMinute / kUnitsPerRotation;
     }
 
     public static double toRawVelUnits(double rpm) {
-        return rpm * 4096.0 / 600.0;
+        return rpm * kUnitsPerRotation / k100msPerMinute;
     }
 
     public double getRotations() {

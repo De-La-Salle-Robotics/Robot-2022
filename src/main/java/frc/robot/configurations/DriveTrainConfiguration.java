@@ -25,6 +25,10 @@ public class DriveTrainConfiguration {
         toConfigure.slot0.kD = 0.0;
         toConfigure.slot0.kF = 0.0;
 
+        toConfigure.voltageCompSaturation = 12.0;
+
         leader.configAllSettings(toConfigure);
+
+        leader.enableVoltageCompensation(true);
     }
 }
