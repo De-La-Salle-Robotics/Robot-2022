@@ -25,7 +25,7 @@ public final class Constants {
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
     /* Radius of drive wheels in inches */
-    public static final double Wheel_Radius = 1.0;
+    public static final double Wheel_Radius = 6.0;
     /* Gearing of drivetrain*/
-    public static final double Drivetrain_Gearing = 1.0 / 7.8;
+    public static final double Drivetrain_Gearing = 10.71;
 }

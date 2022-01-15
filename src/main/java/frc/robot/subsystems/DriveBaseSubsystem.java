@@ -14,6 +14,8 @@ import static frc.robot.Constants.Robot_Width;
 import static frc.robot.Constants.Wheel_Radius;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
+import com.ctre.phoenix.sensors.BasePigeonSimCollection;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -21,6 +23,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.configurations.DriveTrainConfiguration;
 import frc.robot.wrappers.PilotFX;
@@ -40,6 +46,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds(0, 0, 0);
     private Pose2d m_currentPose = new Pose2d();
+    private DifferentialDrivetrainSim m_driveSim =
+            DifferentialDrivetrainSim.createKitbotSim(
+                    KitbotMotor.kDoubleFalcon500PerSide,
+                    KitbotGearing.k10p71,
+                    KitbotWheelSize.kSixInch,
+                    null);
 
     /** Creates a new ExampleSubsystem. */
     public DriveBaseSubsystem() {
@@ -51,6 +63,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
         DriveTrainConfiguration.configure(m_rightLeader, m_rightFollower);
         DriveTrainConfiguration.configure(m_leftLeader, m_leftFollower);
+    }
+
+    public void close() {
+        m_leftLeader.close();
+        m_rightLeader.close();
+        m_leftFollower.close();
+        m_rightFollower.close();
+        m_pigeon.close();
     }
 
     public void arcadeDrive(double throttle, double turn) {
@@ -72,7 +92,19 @@ public class DriveBaseSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        TalonFXSimCollection leftSim = m_leftLeader.getSimCollection();
+        TalonFXSimCollection rightSim = m_rightLeader.getSimCollection();
+        BasePigeonSimCollection pigeonSim = m_pigeon.getSimCollection();
+        m_driveSim.setInputs(leftSim.getMotorOutputLeadVoltage(), rightSim.getMotorOutputLeadVoltage());
+        m_driveSim.update(0.02);
+
+        leftSim.setIntegratedSensorRawPosition(getRawUnits(m_driveSim.getLeftPositionMeters()));
+        rightSim.setIntegratedSensorRawPosition(getRawUnits(m_driveSim.getRightPositionMeters()));
+        leftSim.setIntegratedSensorVelocity(getRawVel(m_driveSim.getLeftVelocityMetersPerSecond()));
+        rightSim.setIntegratedSensorVelocity(getRawVel(m_driveSim.getRightVelocityMetersPerSecond()));
+        pigeonSim.setRawHeading(m_driveSim.getHeading().getDegrees());
+    }
 
     public Pose2d getPose() {
         return m_currentPose;
@@ -93,23 +125,41 @@ public class DriveBaseSubsystem extends SubsystemBase {
         /* Start with Rotations */
         double r = motor.getRotations();
         /* Gear it down according to gearing parameter */
-        r *= Drivetrain_Gearing;
+        r /= Drivetrain_Gearing;
         /* Turn into meters */
         double m = r * Units.inchesToMeters(Wheel_Radius) * 2 * Math.PI;
         /* Return meters */
         return m;
     }
 
+    private static int getRawUnits(double distanceTraveled) {
+        /* Turn it into wheel rotations */
+        double r = distanceTraveled / (Units.inchesToMeters(Wheel_Radius) * 2 * Math.PI);
+        /* Gear it up according to gearing parameter */
+        r *= Drivetrain_Gearing;
+        /* Return raw units */
+        return PilotFX.toRawUnits(r);
+    }
+
     private static double getSpeed(PilotFX motor) {
         /* Start with RPM */
         double rpm = motor.getRPM();
         /* Gear it down according to gearing parameter */
-        rpm *= Drivetrain_Gearing;
+        rpm /= Drivetrain_Gearing;
         /* Turn into meters per minute */
         double mpm = rpm * Units.inchesToMeters(Wheel_Radius) * 2 * Math.PI;
         /* Turn into meters per second */
         double mps = mpm / 60;
         /* Return meters per second */
         return mps;
+    }
+
+    private static int getRawVel(double metersPerSecond) {
+        /* Turn it into RPM */
+        double rpm = metersPerSecond * 60.0 / (Units.inchesToMeters(Wheel_Radius) * 2 * Math.PI);
+        /* Gear it up according to gearing parameter */
+        rpm *= Drivetrain_Gearing;
+        /* Return RPM */
+        return PilotFX.toRawVelUnits(rpm);
     }
 }

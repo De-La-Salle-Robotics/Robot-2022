@@ -20,16 +20,16 @@ public class PilotFX extends WPI_TalonFX {
         return rawUnits / kUnitsPerRotation;
     }
 
-    public static double toRawUnits(double rotations) {
-        return rotations * kUnitsPerRotation;
+    public static int toRawUnits(double rotations) {
+        return (int) (rotations * kUnitsPerRotation);
     }
 
     public static double toRPM(double rawVelUnits) {
         return rawVelUnits * k100msPerMinute / kUnitsPerRotation;
     }
 
-    public static double toRawVelUnits(double rpm) {
-        return rpm * kUnitsPerRotation / k100msPerMinute;
+    public static int toRawVelUnits(double rpm) {
+        return (int) (rpm * kUnitsPerRotation / k100msPerMinute);
     }
 
     public double getRotations() {
@@ -46,7 +46,7 @@ public class PilotFX extends WPI_TalonFX {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        this.initSendable(builder);
+        super.initSendable(builder);
 
         builder.addDoubleProperty("Position", this::getRotations, this::setPosition);
         builder.addDoubleProperty("Velocity", this::getRPM, null);

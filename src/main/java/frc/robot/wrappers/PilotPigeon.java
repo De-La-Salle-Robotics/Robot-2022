@@ -14,6 +14,6 @@ public class PilotPigeon extends WPI_Pigeon2 {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        this.initSendable(builder);
+        super.initSendable(builder);
     }
 }
