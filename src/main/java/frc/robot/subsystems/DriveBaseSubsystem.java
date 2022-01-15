@@ -4,14 +4,7 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.Drivetrain_Gearing;
-import static frc.robot.Constants.Left_Follower_ID;
-import static frc.robot.Constants.Left_Leader_ID;
-import static frc.robot.Constants.Pigeon_ID;
-import static frc.robot.Constants.Right_Follower_ID;
-import static frc.robot.Constants.Right_Leader_ID;
-import static frc.robot.Constants.Robot_Width;
-import static frc.robot.Constants.Wheel_Radius;
+import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
