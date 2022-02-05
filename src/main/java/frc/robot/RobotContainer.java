@@ -8,8 +8,11 @@ import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ArmCommands.ArmManualCommand;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 ;
@@ -23,19 +26,24 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 public class RobotContainer {
     /* Controllers are created here */
     private final XboxController m_driverController = new XboxController(Driver_Controller_Port);
+    private final XboxController m_operatorController = new XboxController(Operator_Controller_Port);
 
     /* Subsystems are created here */
     private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
+    private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
     /* Commands are created here */
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
     private final TeleopDriveCommand m_teleopDrive =
             new TeleopDriveCommand(
                     m_driveBaseSubsystem, m_driverController::getLeftY, m_driverController::getRightX);
+    private final ArmManualCommand m_armManualCommand =
+            new ArmManualCommand(m_armSubsystem, m_operatorController::getLeftY);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         m_driveBaseSubsystem.setDefaultCommand(m_teleopDrive);
+        m_armSubsystem.setDefaultCommand(m_armManualCommand);
 
         // Configure the button bindings
         configureButtonBindings();

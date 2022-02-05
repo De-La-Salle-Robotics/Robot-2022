@@ -23,6 +23,7 @@ public final class Constants {
     public static final int Pigeon_ID = 0;
 
     public static final int Driver_Controller_Port = 0;
+    public static final int Operator_Controller_Port = 1;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;

@@ -1,15 +1,14 @@
 package frc.robot.commands.ArmCommands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
+import java.util.function.DoubleSupplier;
 
 public class ArmManualCommand extends CommandBase {
     private ArmSubsystem m_armSubsystem;
     private DoubleSupplier m_manualPower;
     private boolean m_isFinished;
-    
+
     public ArmManualCommand(ArmSubsystem subsystem, DoubleSupplier manualPower) {
         m_armSubsystem = subsystem;
         m_manualPower = manualPower;
