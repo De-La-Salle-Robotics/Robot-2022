@@ -18,6 +18,8 @@ public final class Constants {
     public static final int Right_Follower_ID = 4;
     public static final int Left_Follower_ID = 3;
 
+    public static final int Arm_Pivot_ID = 5;
+
     public static final int Pigeon_ID = 0;
 
     public static final int Driver_Controller_Port = 0;
