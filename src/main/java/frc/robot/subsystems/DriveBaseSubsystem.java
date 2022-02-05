@@ -56,6 +56,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
         DriveTrainConfiguration.configure(m_rightLeader, m_rightFollower);
         DriveTrainConfiguration.configure(m_leftLeader, m_leftFollower);
+        m_leftLeader.setInverted(true);
     }
 
     public void close() {
