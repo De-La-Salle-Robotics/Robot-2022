@@ -30,4 +30,9 @@ public final class Constants {
     public static final double Wheel_Radius = 6.0;
     /* Gearing of drivetrain*/
     public static final double Drivetrain_Gearing = 10.71;
+
+    /* Arm Constants */
+    public static final int Stowed_Position = 0;
+    public static final int Indexing_Position = 1;
+    public static final int Collecting_Position = 2;
 }
