@@ -4,7 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
+import frc.pilotlib.controllerwrappers.DriverController;
+import frc.pilotlib.controllerwrappers.OperatorController;
 
 /**
 * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -33,8 +34,12 @@ public final class Constants {
     public static final int Driver_Controller_Port = 0;
     public static final int Operator_Controller_Port = 1;
 
-    /* Joystick constants */
-    public static final int Operator_Stow_Button = XboxController.Button.kA.value;
+    /* Driver Joystick constants */
+    public static final DriverController.Axis Throttle_Axis = DriverController.Axis.kLeftY;
+    public static final DriverController.Axis Wheel_Axis = DriverController.Axis.kRightX;
+    /* Operator Joystick constants */
+    public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
+    public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
@@ -48,4 +53,5 @@ public final class Constants {
     public static final int Indexing_Position = 1;
     public static final int Collecting_Position = 2;
     public static final double Arm_Gearbox_Ratio = 25.0 / 1.0;
+    public static final double Arm_Magnet_Offset = 125.0;
 }

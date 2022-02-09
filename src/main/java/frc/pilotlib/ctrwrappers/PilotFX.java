@@ -1,4 +1,4 @@
-package frc.robot.wrappers;
+package frc.pilotlib.ctrwrappers;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;

@@ -2,9 +2,9 @@ import static org.junit.Assert.assertEquals;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.wrappers.PilotFX;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -6,13 +6,13 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ArmCommands.ArmManualCommand;
-import frc.robot.commands.ArmCommands.ArmStowCommand;
+import frc.pilotlib.controllerwrappers.DriverController;
+import frc.pilotlib.controllerwrappers.OperatorController;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.armcommands.ArmManualCommand;
+import frc.robot.commands.armcommands.ArmStowCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
@@ -26,8 +26,9 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 */
 public class RobotContainer {
     /* Controllers are created here */
-    private final XboxController m_driverController = new XboxController(Driver_Controller_Port);
-    private final XboxController m_operatorController = new XboxController(Operator_Controller_Port);
+    private final DriverController m_driverController = new DriverController(Driver_Controller_Port);
+    private final OperatorController m_operatorController =
+            new OperatorController(Operator_Controller_Port);
 
     /* Subsystems are created here */
     private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
@@ -37,9 +38,11 @@ public class RobotContainer {
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
     private final TeleopDriveCommand m_teleopDrive =
             new TeleopDriveCommand(
-                    m_driveBaseSubsystem, m_driverController::getLeftY, m_driverController::getRightX);
+                    m_driveBaseSubsystem,
+                    m_driverController.getAxis(Throttle_Axis),
+                    m_driverController.getAxis(Wheel_Axis));
     private final ArmManualCommand m_armManualCommand =
-            new ArmManualCommand(m_armSubsystem, m_operatorController::getLeftY);
+            new ArmManualCommand(m_armSubsystem, m_operatorController.getAxis(Manual_Arm_Axis));
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -52,7 +55,8 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         /* Bind the arm buttons */
-        new JoystickButton(m_operatorController, Operator_Stow_Button)
+        m_operatorController
+                .getButton(Operator_Stow_Button)
                 .whenPressed(new ArmStowCommand(m_armSubsystem));
     }
 

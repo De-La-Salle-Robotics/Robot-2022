@@ -5,8 +5,12 @@ import static frc.robot.Constants.*;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmConfiguration {
     public static void configure(TalonFX leader, CANCoder armCoder) {
@@ -24,15 +28,14 @@ public class ArmConfiguration {
 
         leader.enableVoltageCompensation(true);
 
-        leader.setSelectedSensorPosition(getArmAngle(armCoder.getPosition()));
-    }
+        CANCoderConfiguration coderConfig = new CANCoderConfiguration();
+        coderConfig.magnetOffsetDegrees = Arm_Magnet_Offset;
+        coderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+        coderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        coderConfig.unitString = "deg";
+        
+        armCoder.configAllSettings(coderConfig);
 
-    private static double getArmAngle(double canCoderAngleDegrees) {
-        /* Convert from degrees to rotations */
-        double cancoderRots = canCoderAngleDegrees / 360.0;
-        /* From rotations to native units */
-        double nativeUnits = cancoderRots * 2048;
-        /* Apply gear ratio to native units */
-        return nativeUnits * Arm_Gearbox_Ratio;
+        leader.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoder.getAbsolutePosition()));
     }
 }

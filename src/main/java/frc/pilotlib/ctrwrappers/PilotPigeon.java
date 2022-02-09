@@ -1,4 +1,4 @@
-package frc.robot.wrappers;
+package frc.pilotlib.ctrwrappers;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import edu.wpi.first.util.sendable.SendableBuilder;

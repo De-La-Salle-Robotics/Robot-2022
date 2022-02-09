@@ -7,20 +7,20 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.pilotlib.ctrwrappers.PilotCoder;
+import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.robot.configurations.ArmConfiguration;
-import frc.robot.wrappers.PilotFX;
 
 public class ArmSubsystem extends SubsystemBase {
     private final PilotFX m_armMotor = new PilotFX(Arm_Pivot_ID);
-    private final WPI_CANCoder m_armCanCoder = new WPI_CANCoder(Arm_Cancoder_ID);
+    private final PilotCoder m_armCanCoder = new PilotCoder(Arm_Cancoder_ID);
 
     public PilotFX getArmMotor() {
         return m_armMotor;
     }
 
-    public WPI_CANCoder getArmCanCoder() {
+    public PilotCoder getArmCanCoder() {
         return m_armCanCoder;
     }
 
@@ -72,13 +72,13 @@ public class ArmSubsystem extends SubsystemBase {
             case Automatic:
                 switch (m_currentPosition) {
                     case Stowed:
-                        m_armMotor.set(ControlMode.Position, Stowed_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Stowed_Position));
                         break;
                     case Indexing:
-                        m_armMotor.set(ControlMode.Position, Indexing_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Indexing_Position));
                         break;
                     case Collecting:
-                        m_armMotor.set(ControlMode.Position, Collecting_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Collecting_Position));
                         break;
                 }
                 break;
@@ -87,4 +87,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {}
+
+    public static double angleToNative(double armAngle) {
+        /* Convert from degrees to rotations */
+        double cancoderRots = armAngle / 360.0;
+        /* Apply gear ratio */
+        return PilotFX.toRawUnits(cancoderRots * Arm_Gearbox_Ratio);
+    }
 }

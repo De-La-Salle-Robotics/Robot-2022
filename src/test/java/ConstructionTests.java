@@ -1,6 +1,6 @@
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.wrappers.PilotFX;
-import frc.robot.wrappers.PilotPigeon;
+import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.ctrwrappers.PilotPigeon;
 import org.junit.*;
 
 public class ConstructionTests {

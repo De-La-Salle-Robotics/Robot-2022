@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.ctrwrappers.PilotPigeon;
 import frc.robot.configurations.DriveTrainConfiguration;
-import frc.robot.wrappers.PilotFX;
-import frc.robot.wrappers.PilotPigeon;
 
 public class DriveBaseSubsystem extends SubsystemBase {
     private final PilotFX m_rightLeader = new PilotFX(Right_Leader_ID);
