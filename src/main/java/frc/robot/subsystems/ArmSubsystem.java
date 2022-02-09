@@ -7,11 +7,23 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.configurations.ArmConfiguration;
 import frc.robot.wrappers.PilotFX;
 
 public class ArmSubsystem extends SubsystemBase {
     private final PilotFX m_armMotor = new PilotFX(Arm_Pivot_ID);
+    private final WPI_CANCoder m_armCanCoder = new WPI_CANCoder(Arm_Cancoder_ID);
+
+    public PilotFX getArmMotor() {
+        return m_armMotor;
+    }
+
+    public WPI_CANCoder getArmCanCoder() {
+        return m_armCanCoder;
+    }
+
     private ArmState m_currentState;
     private ArmPosition m_currentPosition;
     private double m_manualPower;
@@ -30,6 +42,9 @@ public class ArmSubsystem extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
     public ArmSubsystem() {
         addChild("Arm Pivot", m_armMotor);
+        addChild("Arm Cancoder", m_armCanCoder);
+
+        ArmConfiguration.configure(m_armMotor, m_armCanCoder);
 
         m_currentState = ArmState.Manual;
     }

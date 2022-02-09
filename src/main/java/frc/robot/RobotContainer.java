@@ -8,7 +8,9 @@ import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ArmCommands.ArmManualCommand;
+import frc.robot.commands.ArmCommands.ArmStowCommand;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -48,7 +50,11 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        /* Bind the arm buttons */
+        new JoystickButton(m_operatorController, Operator_Stow_Button)
+                .whenPressed(new ArmStowCommand(m_armSubsystem));
+    }
 
     /**
     * Use this to pass the autonomous command to the main {@link Robot} class.
