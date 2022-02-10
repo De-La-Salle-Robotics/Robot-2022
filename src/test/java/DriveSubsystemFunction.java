@@ -10,22 +10,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DriveSubsystemFunction {
-    DriveBaseSubsystem m_driveBaseSubsystem;
+    static DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
     PilotFX leftLeader, rightLeader;
 
     @Before
     public void constructDevices() {
         assert HAL.initialize(500, 0);
 
-        m_driveBaseSubsystem = new DriveBaseSubsystem();
         leftLeader = m_driveBaseSubsystem.getLeftLeader();
         rightLeader = m_driveBaseSubsystem.getRightLeader();
     }
 
     @After
-    public void destroyDevices() {
-        m_driveBaseSubsystem.close();
-    }
+    public void destroyDevices() {}
 
     @Test
     public void testSendable() {

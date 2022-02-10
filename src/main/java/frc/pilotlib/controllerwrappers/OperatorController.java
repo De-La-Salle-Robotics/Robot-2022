@@ -2,6 +2,7 @@ package frc.pilotlib.controllerwrappers;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import java.util.function.DoubleSupplier;
 
 /** 7762's Operator Controller is a logitech F310 in D-input mode. */
@@ -45,6 +46,20 @@ public class OperatorController extends GenericHID {
         }
     }
 
+    public enum POV {
+        kUp(0),
+        kRight(90),
+        kDown(180),
+        kLeft(270);
+
+        @SuppressWarnings("MemberName")
+        public final int value;
+
+        POV(int value) {
+            this.value = value;
+        }
+    }
+
     public OperatorController(int port) {
         super(port);
         /* Verify this matches the logitech controller */
@@ -56,5 +71,9 @@ public class OperatorController extends GenericHID {
 
     public JoystickButton getButton(Button button) {
         return new JoystickButton(this, button.value);
+    }
+
+    public POVButton getButton(POV pov) {
+        return new POVButton(this, pov.value);
     }
 }

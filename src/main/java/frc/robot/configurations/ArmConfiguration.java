@@ -13,29 +13,44 @@ import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmConfiguration {
-    public static void configure(TalonFX leader, CANCoder armCoder) {
+    public static void configure(
+            TalonFX armMotor, TalonFX intake1Motor, TalonFX intake2Motor, CANCoder armCoder) {
 
-        TalonFXConfiguration toConfigure = new TalonFXConfiguration();
-        toConfigure.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        TalonFXConfiguration armConfig = new TalonFXConfiguration();
+        armConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
         /* TODO: Update velocity window to make them smoother */
-        toConfigure.velocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_1Ms;
-        toConfigure.velocityMeasurementWindow = 1;
+        armConfig.velocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_1Ms;
+        armConfig.velocityMeasurementWindow = 1;
 
-        toConfigure.voltageCompSaturation = 12.0;
+        armConfig.voltageCompSaturation = 12.0;
+        armConfig.supplyCurrLimit.currentLimit = 30;
+        armConfig.supplyCurrLimit.triggerThresholdCurrent = 30;
+        armConfig.supplyCurrLimit.triggerThresholdTime = 0;
 
-        leader.configAllSettings(toConfigure);
+        armMotor.configAllSettings(armConfig);
 
-        leader.enableVoltageCompensation(true);
+        TalonFXConfiguration intake1Config = new TalonFXConfiguration();
+        intake1Config.supplyCurrLimit.currentLimit = 30;
+        intake1Config.supplyCurrLimit.triggerThresholdCurrent = 30;
+        intake1Config.supplyCurrLimit.triggerThresholdTime = 0;
+        intake1Motor.configAllSettings(intake1Config);
+
+        TalonFXConfiguration intake2Config = new TalonFXConfiguration();
+        intake2Config.supplyCurrLimit.currentLimit = 30;
+        intake2Config.supplyCurrLimit.triggerThresholdCurrent = 30;
+        intake2Config.supplyCurrLimit.triggerThresholdTime = 0;
+        intake2Motor.configAllSettings(intake2Config);
 
         CANCoderConfiguration coderConfig = new CANCoderConfiguration();
         coderConfig.magnetOffsetDegrees = Arm_Magnet_Offset;
         coderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         coderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         coderConfig.unitString = "deg";
-        
+
         armCoder.configAllSettings(coderConfig);
 
-        leader.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoder.getAbsolutePosition()));
+        armMotor.enableVoltageCompensation(true);
+        armMotor.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoder.getAbsolutePosition()));
     }
 }

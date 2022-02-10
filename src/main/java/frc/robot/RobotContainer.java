@@ -7,13 +7,18 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.armcommands.ArmGoToStowCommand;
 import frc.robot.commands.armcommands.ArmManualCommand;
-import frc.robot.commands.armcommands.ArmStowCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem.ArmPosition;
+import frc.robot.subsystems.ArmSubsystem.IntakeState;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 ;
@@ -44,6 +49,33 @@ public class RobotContainer {
     private final ArmManualCommand m_armManualCommand =
             new ArmManualCommand(m_armSubsystem, m_operatorController.getAxis(Manual_Arm_Axis));
 
+    private final Command m_automaticCollectBalls =
+            /* Execute these commands in sequence */
+            new SequentialCommandGroup(
+                            /* Execute these in parallel */
+                            new ParallelCommandGroup(
+                                            /* Put the arm in the collect position */
+                                            new RunCommand(
+                                                    () -> m_armSubsystem.automaticControl(ArmPosition.Collecting),
+                                                    m_armSubsystem),
+                                            /* And Run the intake to collect balls */
+                                            new RunCommand(
+                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem))
+                                    /* Until we have a ball */
+                                    .withInterrupt(m_armSubsystem::hasBall),
+                            /* Then, move the arm to the index position */
+                            new RunCommand(
+                                            () -> m_armSubsystem.automaticControl(ArmPosition.Indexing), m_armSubsystem)
+                                    /* Until it's at the index position */
+                                    .withInterrupt(m_armSubsystem::isIndexed),
+                            /* Then, run the intake to put the ball in the hopper */
+                            new RunCommand(() -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem)
+                                    /* TODO: Add hopper commands to run the hopper and index the ball further */
+                                    /* For a second */
+                                    .withTimeout(1))
+                    /* Once it's done, repeat it */
+                    .perpetually();
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         m_driveBaseSubsystem.setDefaultCommand(m_teleopDrive);
@@ -57,7 +89,11 @@ public class RobotContainer {
         /* Bind the arm buttons */
         m_operatorController
                 .getButton(Operator_Stow_Button)
-                .whenPressed(new ArmStowCommand(m_armSubsystem));
+                .whenPressed(new ArmGoToStowCommand(m_armSubsystem));
+        m_operatorController
+                .getButton(Operator_Collect_Button)
+                .whileHeld(m_automaticCollectBalls)
+                .whenReleased(() -> m_armSubsystem.runIntake(IntakeState.Idle));
     }
 
     /**

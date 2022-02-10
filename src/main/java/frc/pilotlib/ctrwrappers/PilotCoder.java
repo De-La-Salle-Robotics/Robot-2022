@@ -1,7 +1,6 @@
 package frc.pilotlib.ctrwrappers;
 
 import com.ctre.phoenix.sensors.WPI_CANCoder;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class PilotCoder extends WPI_CANCoder {

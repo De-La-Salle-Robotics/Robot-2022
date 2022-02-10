@@ -29,6 +29,10 @@ public final class Constants {
     /* Arm CAN IDs */
     public static final int Arm_Pivot_ID = 5;
     public static final int Arm_Cancoder_ID = 5;
+    public static final int Arm_Intake1_ID = 6;
+    public static final int Arm_Intake2_ID = 6;
+    /* ARM GPIO IDs */
+    public static final int Ball_Detect_Input_ID = 0;
 
     /* Joystick IDs */
     public static final int Driver_Controller_Port = 0;
@@ -39,7 +43,9 @@ public final class Constants {
     public static final DriverController.Axis Wheel_Axis = DriverController.Axis.kRightX;
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
-    public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
+    public static final OperatorController.POV Operator_Stow_Button = OperatorController.POV.kUp;
+    public static final OperatorController.Button Operator_Collect_Button =
+            OperatorController.Button.kA;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
@@ -49,9 +55,9 @@ public final class Constants {
     public static final double Drivetrain_Gearing = 10.71;
 
     /* Arm Constants */
-    public static final int Stowed_Position = 0;
-    public static final int Indexing_Position = 1;
-    public static final int Collecting_Position = 2;
+    public static final double Stowed_Position = 0;
+    public static final double Indexing_Position = 1;
+    public static final double Collecting_Position = 2;
     public static final double Arm_Gearbox_Ratio = 25.0 / 1.0;
     public static final double Arm_Magnet_Offset = 125.0;
 }

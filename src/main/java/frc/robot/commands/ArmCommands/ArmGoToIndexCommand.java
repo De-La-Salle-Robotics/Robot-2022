@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 
-public class ArmCollectCommand extends CommandBase {
+public class ArmGoToIndexCommand extends CommandBase {
     private ArmSubsystem m_armSubsystem;
     private boolean m_isFinished;
 
-    public ArmCollectCommand(ArmSubsystem subsystem) {
+    public ArmGoToIndexCommand(ArmSubsystem subsystem) {
         m_armSubsystem = subsystem;
         m_isFinished = false;
 
@@ -23,7 +23,7 @@ public class ArmCollectCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_armSubsystem.automaticControl(ArmPosition.Collecting);
+        m_armSubsystem.automaticControl(ArmPosition.Indexing);
     }
 
     // Called once the command ends or is interrupted.
