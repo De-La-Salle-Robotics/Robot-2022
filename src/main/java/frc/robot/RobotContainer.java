@@ -9,6 +9,8 @@ import static frc.robot.Constants.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ArmCommands.ArmCollectCommand;
+import frc.robot.commands.ArmCommands.ArmIndexCommand;
 import frc.robot.commands.ArmCommands.ArmManualCommand;
 import frc.robot.commands.ArmCommands.ArmStowCommand;
 import frc.robot.commands.TaxiAutoCommand;
@@ -54,6 +56,10 @@ public class RobotContainer {
         /* Bind the arm buttons */
         new JoystickButton(m_operatorController, Operator_Stow_Button)
                 .whenPressed(new ArmStowCommand(m_armSubsystem));
+        new JoystickButton(m_operatorController, Operator_Index_Button)
+                .whenPressed(new ArmIndexCommand(m_armSubsystem));
+        new JoystickButton(m_operatorController, Operator_Collect_Button)
+                .whenPressed(new ArmCollectCommand(m_armSubsystem));
     }
 
     /**

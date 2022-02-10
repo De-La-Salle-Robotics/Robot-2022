@@ -35,7 +35,8 @@ public final class Constants {
 
     /* Joystick constants */
     public static final int Operator_Stow_Button = XboxController.Button.kA.value;
-
+    public static final int Operator_Index_Button = XboxController.Button.kB.value;
+    public static final int Operator_Collect_Button = XboxController.Button.kY.value;
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
     /* Radius of drive wheels in inches */
