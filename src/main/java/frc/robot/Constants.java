@@ -34,6 +34,10 @@ public final class Constants {
     /* ARM GPIO IDs */
     public static final int Ball_Detect_Input_ID = 0;
 
+    /* Hopper CAN IDs */
+    public static final int Lower_Hopper_ID = 7;
+    public static final int Upper_Hopper_ID = 8;
+
     /* Joystick IDs */
     public static final int Driver_Controller_Port = 0;
     public static final int Operator_Controller_Port = 1;
