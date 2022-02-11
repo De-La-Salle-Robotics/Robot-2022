@@ -2,32 +2,27 @@ import static org.junit.Assert.assertEquals;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.wrappers.PilotFX;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class DriveSubsystemFunction {
-    DriveBaseSubsystem m_driveBaseSubsystem;
+    static DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
     PilotFX leftLeader, rightLeader;
 
     @Before
     public void constructDevices() {
         assert HAL.initialize(500, 0);
 
-        m_driveBaseSubsystem = new DriveBaseSubsystem();
-        leftLeader = new PilotFX(Constants.Left_Leader_ID);
-        rightLeader = new PilotFX(Constants.Right_Leader_ID);
+        leftLeader = m_driveBaseSubsystem.getLeftLeader();
+        rightLeader = m_driveBaseSubsystem.getRightLeader();
     }
 
     @After
-    public void destroyDevices() {
-        leftLeader.close();
-        rightLeader.close();
-        m_driveBaseSubsystem.close();
-    }
+    public void destroyDevices() {}
 
     @Test
     public void testSendable() {
@@ -36,8 +31,8 @@ public class DriveSubsystemFunction {
 
     @Test
     public void testArcadeDrive() {
-        double throt = 0.4;
-        double turn = 0.6;
+        double throt = 0.6;
+        double turn = 0.4;
         double busV = 12;
         m_driveBaseSubsystem.arcadeDrive(throt, turn);
         var leftSim = leftLeader.getSimCollection();
@@ -48,8 +43,12 @@ public class DriveSubsystemFunction {
 
         waitForUpdate();
 
-        assertEquals(leftSim.getMotorOutputLeadVoltage(), busV * (throt - turn), 1);
-        assertEquals(rightSim.getMotorOutputLeadVoltage(), busV * (throt + turn), 1);
+        double expectedLeft = busV * (throt - turn);
+        double expectedRight = busV * (throt + turn);
+        if (Constants.Left_Side_Inverted) expectedLeft = -expectedLeft;
+        if (Constants.Right_Side_Inverted) expectedRight = -expectedRight;
+        assertEquals(leftSim.getMotorOutputLeadVoltage(), expectedLeft, 0.1);
+        assertEquals(rightSim.getMotorOutputLeadVoltage(), expectedRight, 0.1);
     }
 
     private static void waitForUpdate() {

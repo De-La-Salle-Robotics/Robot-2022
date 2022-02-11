@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.ctrwrappers.PilotPigeon;
 import frc.robot.configurations.DriveTrainConfiguration;
-import frc.robot.wrappers.PilotFX;
-import frc.robot.wrappers.PilotPigeon;
 
 public class DriveBaseSubsystem extends SubsystemBase {
     private final PilotFX m_rightLeader = new PilotFX(Right_Leader_ID);
@@ -31,6 +31,26 @@ public class DriveBaseSubsystem extends SubsystemBase {
     private final PilotFX m_rightFollower = new PilotFX(Right_Follower_ID);
     private final PilotFX m_leftFollower = new PilotFX(Left_Follower_ID);
     private final PilotPigeon m_pigeon = new PilotPigeon(Pigeon_ID);
+
+    public PilotFX getRightLeader() {
+        return m_rightLeader;
+    }
+
+    public PilotFX getLeftLeader() {
+        return m_leftLeader;
+    }
+
+    public PilotFX getRightFollower() {
+        return m_rightFollower;
+    }
+
+    public PilotFX getLeftFollower() {
+        return m_leftFollower;
+    }
+
+    public PilotPigeon getPigeon() {
+        return m_pigeon;
+    }
 
     private final DifferentialDriveKinematics m_kinematics =
             new DifferentialDriveKinematics(Units.inchesToMeters(Robot_Width));
@@ -56,7 +76,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
         DriveTrainConfiguration.configure(m_rightLeader, m_rightFollower);
         DriveTrainConfiguration.configure(m_leftLeader, m_leftFollower);
-        m_leftLeader.setInverted(true);
+        m_leftLeader.setInverted(Left_Side_Inverted);
+        m_rightLeader.setInverted(Right_Side_Inverted);
     }
 
     public void close() {
