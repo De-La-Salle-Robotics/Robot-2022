@@ -43,8 +43,10 @@ public final class Constants {
     public static final DriverController.Axis Wheel_Axis = DriverController.Axis.kRightX;
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
-    public static final OperatorController.Button Operator_Collect_Button = OperatorController.Button.kY;
-    public static final OperatorController.Button Operator_Index_Button = OperatorController.Button.kB;
+    public static final OperatorController.Button Operator_Collect_Button =
+            OperatorController.Button.kY;
+    public static final OperatorController.Button Operator_Index_Button =
+            OperatorController.Button.kB;
     public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
 
     /* Distance between left wheels and right wheels in inches */

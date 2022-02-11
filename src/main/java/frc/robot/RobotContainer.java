@@ -92,8 +92,12 @@ public class RobotContainer {
         m_operatorController
                 .getButton(Operator_Stow_Button)
                 .whenPressed(new ArmGoToStowCommand(m_armSubsystem));
-        m_operatorController.getButton(Operator_Index_Button).whenPressed(new ArmGoToIndexCommand(m_armSubsystem));
-        m_operatorController.getButton(Operator_Collect_Button).whenPressed(new ArmGoToCollectCommand(m_armSubsystem));
+        m_operatorController
+                .getButton(Operator_Index_Button)
+                .whenPressed(new ArmGoToIndexCommand(m_armSubsystem));
+        m_operatorController
+                .getButton(Operator_Collect_Button)
+                .whenPressed(new ArmGoToCollectCommand(m_armSubsystem));
         m_operatorController
                 .getButton(Operator_Collect_Button)
                 .whileHeld(m_automaticCollectBalls)
