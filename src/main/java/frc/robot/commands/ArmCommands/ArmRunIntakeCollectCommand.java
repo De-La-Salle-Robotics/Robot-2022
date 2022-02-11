@@ -2,16 +2,14 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
-import java.util.function.DoubleSupplier;
+import frc.robot.subsystems.ArmSubsystem.IntakeState;
 
-public class ArmManualCommand extends CommandBase {
+public class ArmRunIntakeCollectCommand extends CommandBase {
     private ArmSubsystem m_armSubsystem;
-    private DoubleSupplier m_manualPower;
     private boolean m_isFinished;
 
-    public ArmManualCommand(ArmSubsystem subsystem, DoubleSupplier manualPower) {
+    public ArmRunIntakeCollectCommand(ArmSubsystem subsystem) {
         m_armSubsystem = subsystem;
-        m_manualPower = manualPower;
         m_isFinished = false;
 
         addRequirements(subsystem);
@@ -25,7 +23,7 @@ public class ArmManualCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_armSubsystem.manualControl(m_manualPower.getAsDouble());
+        m_armSubsystem.runIntake(IntakeState.Collect);
     }
 
     // Called once the command ends or is interrupted.

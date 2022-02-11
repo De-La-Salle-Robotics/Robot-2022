@@ -1,14 +1,14 @@
-package frc.robot.commands.ArmCommands;
+package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 
-public class ArmIndexCommand extends CommandBase {
+public class ArmGoToIndexCommand extends CommandBase {
     private ArmSubsystem m_armSubsystem;
     private boolean m_isFinished;
 
-    public ArmIndexCommand(ArmSubsystem subsystem) {
+    public ArmGoToIndexCommand(ArmSubsystem subsystem) {
         m_armSubsystem = subsystem;
         m_isFinished = false;
 

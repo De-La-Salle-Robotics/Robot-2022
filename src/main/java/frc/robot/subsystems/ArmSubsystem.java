@@ -7,26 +7,50 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.pilotlib.ctrwrappers.PilotCoder;
+import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.utils.RangeUtils;
 import frc.robot.configurations.ArmConfiguration;
-import frc.robot.wrappers.PilotFX;
 
 public class ArmSubsystem extends SubsystemBase {
+    private static final double Collect_Power = 0.5;
+    private static final double Spit_Power = -0.5;
+    private static final double Idle_Power = 0;
+    private static final double Angle_Threshold = 4;
+
     private final PilotFX m_armMotor = new PilotFX(Arm_Pivot_ID);
-    private final WPI_CANCoder m_armCanCoder = new WPI_CANCoder(Arm_Cancoder_ID);
+    private final PilotFX m_intakeMotor1 = new PilotFX(Arm_Intake1_ID);
+    private final PilotFX m_intakeMotor2 = new PilotFX(Arm_Intake2_ID);
+    private final PilotCoder m_armCanCoder = new PilotCoder(Arm_Cancoder_ID);
+
+    private final DigitalInput m_ballDetectInput = new DigitalInput(Ball_Detect_Input_ID);
 
     public PilotFX getArmMotor() {
         return m_armMotor;
     }
 
-    public WPI_CANCoder getArmCanCoder() {
+    public PilotFX getIntakeMotor1() {
+        return m_intakeMotor1;
+    }
+
+    public PilotFX getIntakeMotor2() {
+        return m_intakeMotor2;
+    }
+
+    public PilotCoder getArmCanCoder() {
         return m_armCanCoder;
+    }
+
+    public DigitalInput getBallDetectInput() {
+        return m_ballDetectInput;
     }
 
     private ArmState m_currentState;
     private ArmPosition m_currentPosition;
     private double m_manualPower;
+    private IntakeState m_intakeState;
 
     private enum ArmState {
         Manual, // The arm is controlled manually through manualControl
@@ -39,14 +63,24 @@ public class ArmSubsystem extends SubsystemBase {
         Collecting,
     }
 
+    public enum IntakeState {
+        Collect,
+        Spit,
+        Idle,
+    }
+
     /** Creates a new ExampleSubsystem. */
     public ArmSubsystem() {
         addChild("Arm Pivot", m_armMotor);
+        addChild("Intake Motor 1", m_intakeMotor1);
+        addChild("Intake Motor 2", m_intakeMotor2);
         addChild("Arm Cancoder", m_armCanCoder);
+        addChild("Intake Ball Detector", m_ballDetectInput);
 
-        ArmConfiguration.configure(m_armMotor, m_armCanCoder);
+        ArmConfiguration.configure(m_armMotor, m_intakeMotor1, m_intakeMotor2, m_armCanCoder);
 
         m_currentState = ArmState.Manual;
+        m_intakeState = IntakeState.Idle;
     }
 
     public void close() {
@@ -63,6 +97,10 @@ public class ArmSubsystem extends SubsystemBase {
         m_currentPosition = armPosition;
     }
 
+    public void runIntake(IntakeState intakeState) {
+        m_intakeState = intakeState;
+    }
+
     @Override
     public void periodic() {
         switch (m_currentState) {
@@ -72,19 +110,48 @@ public class ArmSubsystem extends SubsystemBase {
             case Automatic:
                 switch (m_currentPosition) {
                     case Stowed:
-                        m_armMotor.set(ControlMode.Position, Stowed_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Stowed_Position));
                         break;
                     case Indexing:
-                        m_armMotor.set(ControlMode.Position, Indexing_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Indexing_Position));
                         break;
                     case Collecting:
-                        m_armMotor.set(ControlMode.Position, Collecting_Position);
+                        m_armMotor.set(ControlMode.Position, angleToNative(Collecting_Position));
                         break;
                 }
                 break;
         }
+        switch (m_intakeState) {
+            case Collect:
+                m_intakeMotor1.set(ControlMode.PercentOutput, Collect_Power);
+                m_intakeMotor2.set(ControlMode.PercentOutput, Collect_Power);
+                break;
+            case Spit:
+                m_intakeMotor1.set(ControlMode.PercentOutput, Spit_Power);
+                m_intakeMotor2.set(ControlMode.PercentOutput, Spit_Power);
+                break;
+            case Idle:
+                m_intakeMotor1.set(ControlMode.PercentOutput, Idle_Power);
+                m_intakeMotor2.set(ControlMode.PercentOutput, Idle_Power);
+                break;
+        }
+    }
+
+    public boolean hasBall() {
+        return m_ballDetectInput.get() == true;
+    }
+
+    public boolean isIndexed() {
+        return RangeUtils.isInRange(m_armCanCoder.getPosition(), Indexing_Position, Angle_Threshold);
     }
 
     @Override
     public void simulationPeriodic() {}
+
+    public static double angleToNative(double armAngle) {
+        /* Convert from degrees to rotations */
+        double cancoderRots = armAngle / 360.0;
+        /* Apply gear ratio */
+        return PilotFX.toRawUnits(cancoderRots * Arm_Gearbox_Ratio);
+    }
 }

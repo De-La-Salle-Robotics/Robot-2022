@@ -1,36 +1,40 @@
 import static org.junit.Assert.assertEquals;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ArmCommands.ArmCollectCommand;
-import frc.robot.commands.ArmCommands.ArmIndexCommand;
-import frc.robot.commands.ArmCommands.ArmStowCommand;
+import frc.pilotlib.ctrwrappers.PilotCoder;
+import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.robot.commands.armcommands.ArmGoToCollectCommand;
+import frc.robot.commands.armcommands.ArmGoToIndexCommand;
+import frc.robot.commands.armcommands.ArmGoToStowCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.wrappers.PilotFX;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ArmSubsystemFunction {
-    ArmSubsystem m_armSubsystem;
+    static ArmSubsystem m_armSubsystem = new ArmSubsystem();
     PilotFX armFx;
-    WPI_CANCoder armCoder;
+    PilotFX intakeFx1;
+    PilotFX intakeFx2;
+    PilotCoder armCoder;
+    DigitalInput ballDetectInput;
 
     @Before
     public void constructDevices() {
         assert HAL.initialize(500, 0);
 
-        m_armSubsystem = new ArmSubsystem();
         armFx = m_armSubsystem.getArmMotor();
+        intakeFx1 = m_armSubsystem.getIntakeMotor1();
+        intakeFx2 = m_armSubsystem.getIntakeMotor2();
         armCoder = m_armSubsystem.getArmCanCoder();
+        ballDetectInput = m_armSubsystem.getBallDetectInput();
     }
 
     @After
-    public void destroyDevices() {
-        armFx.close();
-    }
+    public void destroyDevices() {}
 
     @Test
     public void testSendable() {
@@ -54,7 +58,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticStow() {
-        ArmStowCommand stowCommand = new ArmStowCommand(m_armSubsystem);
+        ArmGoToStowCommand stowCommand = new ArmGoToStowCommand(m_armSubsystem);
         stowCommand.initialize();
         stowCommand.execute();
         m_armSubsystem.periodic();
@@ -65,7 +69,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticIndex() {
-        ArmIndexCommand indexCommand = new ArmIndexCommand(m_armSubsystem);
+        ArmGoToIndexCommand indexCommand = new ArmGoToIndexCommand(m_armSubsystem);
         indexCommand.initialize();
         indexCommand.execute();
         m_armSubsystem.periodic();
@@ -76,7 +80,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticCollect() {
-        ArmCollectCommand collectCommand = new ArmCollectCommand(m_armSubsystem);
+        ArmGoToCollectCommand collectCommand = new ArmGoToCollectCommand(m_armSubsystem);
         collectCommand.initialize();
         collectCommand.execute();
         m_armSubsystem.periodic();
