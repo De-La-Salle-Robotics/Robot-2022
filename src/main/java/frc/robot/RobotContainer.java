@@ -7,6 +7,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,6 +23,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 import frc.robot.subsystems.ArmSubsystem.IntakeState;
 import frc.robot.subsystems.DriveBaseSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.HopperSubsystem.HopperState;
 
 ;
 
@@ -40,6 +43,7 @@ public class RobotContainer {
     /* Subsystems are created here */
     private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
     private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+    private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
 
     /* Commands are created here */
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
@@ -71,10 +75,16 @@ public class RobotContainer {
                                     /* Until it's at the index position */
                                     .withInterrupt(m_armSubsystem::isIndexed),
                             /* Then, run the intake to put the ball in the hopper */
-                            new RunCommand(() -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem)
-                                    /* TODO: Add hopper commands to run the hopper and index the ball further */
+                            new ParallelCommandGroup(
+                                            new RunCommand(
+                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem),
+                                            new RunCommand(
+                                                    () -> m_hopperSubsystem.runHopper(HopperState.Intake), m_hopperSubsystem)
+                                            )
                                     /* For a second */
-                                    .withTimeout(1))
+                                    .withTimeout(1),
+                            /* Then stop the hopper */
+                            new InstantCommand(() -> m_hopperSubsystem.runHopper(HopperState.Idle), m_hopperSubsystem))
                     /* Once it's done, repeat it */
                     .perpetually();
 
