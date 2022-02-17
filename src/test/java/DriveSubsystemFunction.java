@@ -10,13 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DriveSubsystemFunction {
-    static DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
+    static DriveBaseSubsystem m_driveBaseSubsystem;
     PilotFX leftLeader, rightLeader;
 
     @Before
     public void constructDevices() {
         assert HAL.initialize(500, 0);
 
+        m_driveBaseSubsystem = new DriveBaseSubsystem();
         leftLeader = m_driveBaseSubsystem.getLeftLeader();
         rightLeader = m_driveBaseSubsystem.getRightLeader();
     }

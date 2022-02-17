@@ -1,8 +1,11 @@
+import static frc.robot.Constants.*;
 import static org.junit.Assert.assertEquals;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.sensors.CANCoderSimCollection;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.simulation.DIOSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.pilotlib.ctrwrappers.PilotCoder;
 import frc.pilotlib.ctrwrappers.PilotFX;
@@ -21,6 +24,7 @@ public class ArmSubsystemFunction {
     PilotFX intakeFx2;
     PilotCoder armCoder;
     DigitalInput ballDetectInput;
+    DIOSim ballDetectSim;
 
     @Before
     public void constructDevices() {
@@ -31,6 +35,7 @@ public class ArmSubsystemFunction {
         intakeFx2 = m_armSubsystem.getIntakeMotor2();
         armCoder = m_armSubsystem.getArmCanCoder();
         ballDetectInput = m_armSubsystem.getBallDetectInput();
+        ballDetectSim = new DIOSim(ballDetectInput);
     }
 
     @After
@@ -87,6 +92,25 @@ public class ArmSubsystemFunction {
         waitForUpdate();
 
         assertEquals(armFx.getControlMode(), ControlMode.Position);
+    }
+
+    @Test
+    public void testBallDetect() {
+        ballDetectSim.setValue(false);
+        assertEquals(m_armSubsystem.hasBall(), false);
+        ballDetectSim.setValue(true);
+        assertEquals(m_armSubsystem.hasBall(), true);
+    }
+
+    @Test
+    public void testIndexPosition() {
+        CANCoderSimCollection armSim = armCoder.getSimCollection();
+        armSim.setRawPosition((int) (Stowed_Position * 4096.0 / 360.0));
+        waitForUpdate();
+        assertEquals(m_armSubsystem.isIndexed(), false);
+        armSim.setRawPosition((int) (Indexing_Position * 4096.0 / 360.0));
+        waitForUpdate();
+        assertEquals(m_armSubsystem.isIndexed(), true);
     }
 
     private static void waitForUpdate() {

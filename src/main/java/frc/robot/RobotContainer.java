@@ -79,12 +79,12 @@ public class RobotContainer {
                                             new RunCommand(
                                                     () -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem),
                                             new RunCommand(
-                                                    () -> m_hopperSubsystem.runHopper(HopperState.Intake), m_hopperSubsystem)
-                                            )
+                                                    () -> m_hopperSubsystem.runHopper(HopperState.Intake), m_hopperSubsystem))
                                     /* For a second */
                                     .withTimeout(1),
                             /* Then stop the hopper */
-                            new InstantCommand(() -> m_hopperSubsystem.runHopper(HopperState.Idle), m_hopperSubsystem))
+                            new InstantCommand(
+                                    () -> m_hopperSubsystem.runHopper(HopperState.Idle), m_hopperSubsystem))
                     /* Once it's done, repeat it */
                     .perpetually();
 
