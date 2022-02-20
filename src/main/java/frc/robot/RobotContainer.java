@@ -62,29 +62,28 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                             /* Put the arm in the collect position */
                                             new RunCommand(
-                                                    () -> m_armSubsystem.automaticControl(ArmPosition.Collecting),
-                                                    m_armSubsystem),
+                                                    () -> m_armSubsystem.automaticControl(ArmPosition.Collecting)),
                                             /* And Run the intake to collect balls */
                                             new RunCommand(
-                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem))
+                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect)))
                                     /* Until we have a ball */
                                     .withInterrupt(m_armSubsystem::hasBall),
                             /* Then, move the arm to the index position */
                             new RunCommand(
-                                            () -> m_armSubsystem.automaticControl(ArmPosition.Indexing), m_armSubsystem)
+                                            () -> m_armSubsystem.automaticControl(ArmPosition.Indexing))
                                     /* Until it's at the index position */
                                     .withInterrupt(m_armSubsystem::isIndexed),
                             /* Then, run the intake to put the ball in the hopper */
                             new ParallelCommandGroup(
                                             new RunCommand(
-                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect), m_armSubsystem),
+                                                    () -> m_armSubsystem.runIntake(IntakeState.Collect)),
                                             new RunCommand(
-                                                    () -> m_hopperSubsystem.runHopper(HopperState.Intake), m_hopperSubsystem))
+                                                    () -> m_hopperSubsystem.runHopper(HopperState.Intake)))
                                     /* For a second */
                                     .withTimeout(1),
                             /* Then stop the hopper */
                             new InstantCommand(
-                                    () -> m_hopperSubsystem.runHopper(HopperState.Idle), m_hopperSubsystem))
+                                    () -> m_hopperSubsystem.runHopper(HopperState.Idle)))
                     /* Once it's done, repeat it */
                     .perpetually();
 
