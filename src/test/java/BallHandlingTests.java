@@ -13,7 +13,6 @@ import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.robot.commands.armcommands.ArmCommands;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,7 +87,8 @@ public class BallHandlingTests {
 
     @Test
     public void testAutomaticCollect() {
-        Command collectCommand = ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem);
+        Command collectCommand =
+                ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem);
         collectCommand.initialize();
         collectCommand.execute();
         m_armSubsystem.periodic();
@@ -99,7 +99,7 @@ public class BallHandlingTests {
 
     @Test
     public void testBallDetect() {
-         // Sensor is inverted, so test the inverse of the value
+        // Sensor is inverted, so test the inverse of the value
         ballDetectSim.setValue(false);
         assertEquals(m_armSubsystem.hasBall(), true);
         ballDetectSim.setValue(true);
