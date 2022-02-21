@@ -25,7 +25,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final PilotFX m_intakeMotor2 = new PilotFX(Arm_Intake2_ID);
     private final PilotCoder m_armCanCoder = new PilotCoder(Arm_Cancoder_ID);
 
-    private final PilotDigitalInput m_ballDetectInput = new PilotDigitalInput(Ball_Detect_Input_ID, true);
+    private final PilotDigitalInput m_ballDetectInput =
+            new PilotDigitalInput(Ball_Detect_Input_ID, true);
 
     public PilotFX getArmMotor() {
         return m_armMotor;

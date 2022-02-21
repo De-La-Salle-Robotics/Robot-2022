@@ -7,18 +7,20 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.pilotlib.ctrwrappers.PilotCoder;
 import frc.pilotlib.ctrwrappers.PilotFX;
-import frc.robot.commands.armcommands.ArmGoToCollectCommand;
-import frc.robot.commands.armcommands.ArmGoToIndexCommand;
-import frc.robot.commands.armcommands.ArmGoToStowCommand;
+import frc.robot.commands.armcommands.ArmCommands;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ArmSubsystemFunction {
+public class BallHandlingTests {
     static ArmSubsystem m_armSubsystem = new ArmSubsystem();
+    static HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
     PilotFX armFx;
     PilotFX intakeFx1;
     PilotFX intakeFx2;
@@ -44,6 +46,7 @@ public class ArmSubsystemFunction {
     @Test
     public void testSendable() {
         SmartDashboard.putData("Arm Subsystem", m_armSubsystem);
+        SmartDashboard.putData("Hopper Subsystem", m_hopperSubsystem);
     }
 
     @Test
@@ -63,7 +66,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticStow() {
-        ArmGoToStowCommand stowCommand = new ArmGoToStowCommand(m_armSubsystem);
+        Command stowCommand = ArmCommands.getArmGoToStoreCommand(m_armSubsystem);
         stowCommand.initialize();
         stowCommand.execute();
         m_armSubsystem.periodic();
@@ -74,7 +77,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticIndex() {
-        ArmGoToIndexCommand indexCommand = new ArmGoToIndexCommand(m_armSubsystem);
+        Command indexCommand = ArmCommands.getArmGoToIndexCommand(m_armSubsystem);
         indexCommand.initialize();
         indexCommand.execute();
         m_armSubsystem.periodic();
@@ -85,7 +88,7 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testAutomaticCollect() {
-        ArmGoToCollectCommand collectCommand = new ArmGoToCollectCommand(m_armSubsystem);
+        Command collectCommand = ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem);
         collectCommand.initialize();
         collectCommand.execute();
         m_armSubsystem.periodic();
@@ -96,10 +99,11 @@ public class ArmSubsystemFunction {
 
     @Test
     public void testBallDetect() {
+         // Sensor is inverted, so test the inverse of the value
         ballDetectSim.setValue(false);
-        assertEquals(m_armSubsystem.hasBall(), false);
-        ballDetectSim.setValue(true);
         assertEquals(m_armSubsystem.hasBall(), true);
+        ballDetectSim.setValue(true);
+        assertEquals(m_armSubsystem.hasBall(), false);
     }
 
     @Test

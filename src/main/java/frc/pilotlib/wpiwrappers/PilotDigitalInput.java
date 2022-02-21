@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class PilotDigitalInput extends DigitalInput {
     private boolean m_isInverted;
-    public PilotDigitalInput(int channel, boolean invert){
+
+    public PilotDigitalInput(int channel, boolean invert) {
         super(channel);
         m_isInverted = invert;
     }
