@@ -7,11 +7,11 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotCoder;
 import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.pilotlib.utils.RangeUtils;
+import frc.pilotlib.wpiwrappers.PilotDigitalInput;
 import frc.robot.configurations.ArmConfiguration;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -25,7 +25,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final PilotFX m_intakeMotor2 = new PilotFX(Arm_Intake2_ID);
     private final PilotCoder m_armCanCoder = new PilotCoder(Arm_Cancoder_ID);
 
-    private final DigitalInput m_ballDetectInput = new DigitalInput(Ball_Detect_Input_ID);
+    private final PilotDigitalInput m_ballDetectInput =
+            new PilotDigitalInput(Ball_Detect_Input_ID, true);
 
     public PilotFX getArmMotor() {
         return m_armMotor;
@@ -43,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
         return m_armCanCoder;
     }
 
-    public DigitalInput getBallDetectInput() {
+    public PilotDigitalInput getBallDetectInput() {
         return m_ballDetectInput;
     }
 

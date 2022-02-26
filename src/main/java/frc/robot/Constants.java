@@ -34,6 +34,10 @@ public final class Constants {
     /* ARM GPIO IDs */
     public static final int Ball_Detect_Input_ID = 0;
 
+    /* Hopper CAN IDs */
+    public static final int Lower_Hopper_ID = 7;
+    public static final int Upper_Hopper_ID = 8;
+
     /* Joystick IDs */
     public static final int Driver_Controller_Port = 0;
     public static final int Operator_Controller_Port = 1;
@@ -57,9 +61,9 @@ public final class Constants {
     public static final double Drivetrain_Gearing = 10.71;
 
     /* Arm Constants */
-    public static final double Stowed_Position = 0;
-    public static final double Indexing_Position = 1;
-    public static final double Collecting_Position = 2;
+    public static final double Stowed_Position = 90;
+    public static final double Indexing_Position = 70;
+    public static final double Collecting_Position = 10;
     public static final double Arm_Gearbox_Ratio = 25.0 / 1.0;
     public static final double Arm_Magnet_Offset = 125.0;
 }
