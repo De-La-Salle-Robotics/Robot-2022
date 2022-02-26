@@ -31,6 +31,10 @@ public class ArmCommands {
         return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Collect), armSubsystem);
     }
 
+    public static Command getRunHopperCommand(HopperSubsystem hopperSubsystem) {
+        return new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Intake), hopperSubsystem);
+    }
+
     public static Command getArmAutomaticCollectCommand(
             ArmSubsystem armSubsystem, HopperSubsystem hopperSubsystem) {
         /* Execute these commands in sequence */
@@ -45,7 +49,11 @@ public class ArmCommands {
                                 /* Until we have a ball */
                                 .withInterrupt(armSubsystem::hasBall),
                         /* Then, move the arm to the index position */
-                        new RunCommand(() -> armSubsystem.automaticControl(ArmPosition.Indexing))
+                        new RunCommand(
+                                        () -> {
+                                            armSubsystem.automaticControl(ArmPosition.Indexing);
+                                            armSubsystem.runIntake(IntakeState.Idle);
+                                        })
                                 /* Until it's at the index position */
                                 .withInterrupt(armSubsystem::isIndexed),
                         /* Then, run the intake to put the ball in the hopper */

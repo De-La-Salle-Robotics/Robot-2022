@@ -23,6 +23,8 @@ public class BallHandlingTests {
     PilotFX armFx;
     PilotFX intakeFx1;
     PilotFX intakeFx2;
+    PilotFX lowerHopper;
+    PilotFX upperHopper;
     PilotCoder armCoder;
     DigitalInput ballDetectInput;
     DIOSim ballDetectSim;
@@ -34,6 +36,8 @@ public class BallHandlingTests {
         armFx = m_armSubsystem.getArmMotor();
         intakeFx1 = m_armSubsystem.getIntakeMotor1();
         intakeFx2 = m_armSubsystem.getIntakeMotor2();
+        lowerHopper = m_hopperSubsystem.getLowerHopperFx();
+        upperHopper = m_hopperSubsystem.getUpperHopperFx();
         armCoder = m_armSubsystem.getArmCanCoder();
         ballDetectInput = m_armSubsystem.getBallDetectInput();
         ballDetectSim = new DIOSim(ballDetectInput);
@@ -58,7 +62,7 @@ public class BallHandlingTests {
 
         fxSim.setBusVoltage(busV);
 
-        waitForUpdate();
+        waitForUpdate(0.1);
 
         assertEquals(fxSim.getMotorOutputLeadVoltage(), busV * dutyCycle, 1);
     }
@@ -69,7 +73,7 @@ public class BallHandlingTests {
         stowCommand.initialize();
         stowCommand.execute();
         m_armSubsystem.periodic();
-        waitForUpdate();
+        waitForUpdate(0.1);
 
         assertEquals(armFx.getControlMode(), ControlMode.Position);
     }
@@ -80,7 +84,7 @@ public class BallHandlingTests {
         indexCommand.initialize();
         indexCommand.execute();
         m_armSubsystem.periodic();
-        waitForUpdate();
+        waitForUpdate(0.1);
 
         assertEquals(armFx.getControlMode(), ControlMode.Position);
     }
@@ -92,7 +96,7 @@ public class BallHandlingTests {
         collectCommand.initialize();
         collectCommand.execute();
         m_armSubsystem.periodic();
-        waitForUpdate();
+        waitForUpdate(0.1);
 
         assertEquals(armFx.getControlMode(), ControlMode.Position);
     }
@@ -110,17 +114,77 @@ public class BallHandlingTests {
     public void testIndexPosition() {
         CANCoderSimCollection armSim = armCoder.getSimCollection();
         armSim.setRawPosition((int) (Stowed_Position * 4096.0 / 360.0));
-        waitForUpdate();
+        waitForUpdate(0.1);
         assertEquals(m_armSubsystem.isIndexed(), false);
         armSim.setRawPosition((int) (Indexing_Position * 4096.0 / 360.0));
-        waitForUpdate();
+        waitForUpdate(0.1);
         assertEquals(m_armSubsystem.isIndexed(), true);
     }
 
-    private static void waitForUpdate() {
+    @Test
+    public void testAutomaticCollectSequence() {
+        /* Create the command and initialize */
+        Command automaticCollect =
+                ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem);
+        automaticCollect.initialize();
+        /* Initialize sim objects to starting values */
+        CANCoderSimCollection armSim = armCoder.getSimCollection();
+        armSim.setRawPosition((int) (Stowed_Position * 4096.0 / 360.0)); // Start stow
+        ballDetectSim.setValue(true); // Start no ball
+        waitForUpdate(0.1, automaticCollect);
+        /* Make sure arm is trying to move down to collect balls */
+        assertEquals(armFx.getControlMode(), ControlMode.Position);
+        assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Collecting_Position), 10);
+        assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx1.getMotorOutputPercent(), 0.5, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), 0.5, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), 0, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), 0, 0.01);
+
+        /* Now detect the ball and verify the arm stops running and moves to index */
+        ballDetectSim.setValue(false); // We have a ball now
+
+        waitForUpdate(0.1, automaticCollect);
+
+        /* Make sure arm is moving to index without anything running */
+        assertEquals(armFx.getControlMode(), ControlMode.Position);
+        assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Indexing_Position), 10);
+        assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx1.getMotorOutputPercent(), 0, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), 0, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), 0, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), 0, 0.01);
+
+        /* Now set the intake to index position */
+        armSim.setRawPosition((int) (Indexing_Position * 4096.0 / 360.0));
+
+        waitForUpdate(0.1, automaticCollect);
+
+        /* Verify arm is still holding index, but now the hoppers are running and intake is running to index */
+        assertEquals(armFx.getControlMode(), ControlMode.Position);
+        assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Indexing_Position), 10);
+        assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
+        assertEquals(intakeFx1.getMotorOutputPercent(), 0.5, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), 0.5, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), 1, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), 1, 0.01);
+        /* And we're done */
+    }
+
+    private static void waitForUpdate(double seconds, Command... commands) {
         try {
-            com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(500);
-            Thread.sleep(200);
+            for (int i = 0; i < 10; ++i) {
+                com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
+                for (Command c : commands) {
+                    c.execute();
+                }
+                m_hopperSubsystem.periodic();
+                m_armSubsystem.periodic();
+                Thread.sleep((long)(seconds * 100));
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
