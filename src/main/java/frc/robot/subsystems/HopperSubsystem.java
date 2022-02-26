@@ -13,8 +13,13 @@ public class HopperSubsystem extends SubsystemBase {
     private PilotFX m_upperHopper = new PilotFX(Upper_Hopper_ID);
     private HopperState m_hopperState = HopperState.Idle;
 
-    public PilotFX getLowerHopperFx() { return m_lowerHopper; }
-    public PilotFX getUpperHopperFx() { return m_upperHopper; }
+    public PilotFX getLowerHopperFx() {
+        return m_lowerHopper;
+    }
+
+    public PilotFX getUpperHopperFx() {
+        return m_upperHopper;
+    }
 
     public enum HopperState {
         Idle,

@@ -183,7 +183,7 @@ public class BallHandlingTests {
                 }
                 m_hopperSubsystem.periodic();
                 m_armSubsystem.periodic();
-                Thread.sleep((long)(seconds * 100));
+                Thread.sleep((long) (seconds * 100));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
