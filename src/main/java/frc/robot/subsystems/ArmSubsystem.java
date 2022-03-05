@@ -109,17 +109,7 @@ public class ArmSubsystem extends SubsystemBase {
                 m_armMotor.set(ControlMode.PercentOutput, m_manualPower);
                 break;
             case Automatic:
-                switch (m_currentPosition) {
-                    case Stowed:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Stowed_Position));
-                        break;
-                    case Indexing:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Indexing_Position));
-                        break;
-                    case Collecting:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Collecting_Position));
-                        break;
-                }
+                m_armMotor.set(ControlMode.Position, getNativeTarget());
                 break;
         }
         switch (m_intakeState) {
@@ -154,5 +144,17 @@ public class ArmSubsystem extends SubsystemBase {
         double cancoderRots = armAngle / 360.0;
         /* Apply gear ratio */
         return PilotFX.toRawUnits(cancoderRots * Arm_Gearbox_Ratio);
+    }
+
+    public double getNativeTarget() {
+        switch (m_currentPosition) {
+            case Stowed:
+                return angleToNative(Stowed_Position);
+            case Indexing:
+                return angleToNative(Indexing_Position);
+            case Collecting:
+                return angleToNative(Collecting_Position);
+        }
+        return -7762;
     }
 }

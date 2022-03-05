@@ -31,6 +31,14 @@ public class ArmCommands {
         return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Collect), armSubsystem);
     }
 
+    public static Command getArmRunOuttakeCommand(ArmSubsystem armSubsystem) {
+        return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Spit), armSubsystem);
+    }
+
+    public static Command getArmRunIdleCommand(ArmSubsystem armSubsystem) {
+        return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Idle), armSubsystem);
+    }
+
     public static Command getRunHopperCommand(HopperSubsystem hopperSubsystem) {
         return new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Intake), hopperSubsystem);
     }

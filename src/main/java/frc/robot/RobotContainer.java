@@ -7,14 +7,15 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.armcommands.ArmCommands;
 import frc.robot.commands.armcommands.ArmManualCommand;
+import frc.robot.commands.hoppercommands.HopperCommands;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ArmSubsystem.IntakeState;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 
@@ -67,10 +68,43 @@ public class RobotContainer {
         m_operatorController
                 .getButton(Operator_Collect_Button)
                 .whenPressed(ArmCommands.getArmGoToCollectCommand(m_armSubsystem));
-        m_operatorController
-                .getButton(Operator_Collect_Button)
-                .whileHeld(ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem))
-                .whenReleased(() -> m_armSubsystem.runIntake(IntakeState.Idle));
+
+        Trigger intakeButton = m_operatorController.getButton(Operator_Intake_Hopper_Button);
+        Trigger outtakeButton = m_operatorController.getButton(Operator_Outtake_Hopper_Button);
+        Trigger automaticTrigger = m_operatorController.getButton(Operator_Collect_Button);
+        Trigger manualIntake = m_operatorController.getButton(Operator_Intake_Manual_Intake_Button);
+        Trigger manualOuttake = m_operatorController.getButton(Operator_Intake_Manual_Outtake_Button);
+        automaticTrigger.whenActive(
+                ArmCommands.getArmAutomaticCollectCommand(m_armSubsystem, m_hopperSubsystem));
+        intakeButton
+                .negate()
+                .and(outtakeButton.negate())
+                .and(automaticTrigger.negate())
+                .whenActive(HopperCommands.getHopperIdleCommand(m_hopperSubsystem));
+        intakeButton
+                .and(outtakeButton.negate())
+                .and(automaticTrigger.negate())
+                .whenActive(HopperCommands.getHopperIntakeCommand(m_hopperSubsystem));
+        intakeButton
+                .negate()
+                .and(outtakeButton)
+                .and(automaticTrigger.negate())
+                .whenActive(HopperCommands.getHopperOuttakeCommand(m_hopperSubsystem));
+
+        manualIntake
+                .and(manualOuttake.negate())
+                .and(automaticTrigger.negate())
+                .whenActive(ArmCommands.getArmRunIntakeCommand(m_armSubsystem));
+        manualIntake
+                .negate()
+                .and(manualOuttake)
+                .and(automaticTrigger.negate())
+                .whenActive(ArmCommands.getArmRunOuttakeCommand(m_armSubsystem));
+        manualIntake
+                .negate()
+                .and(manualOuttake.negate())
+                .and(automaticTrigger.negate())
+                .whenActive(ArmCommands.getArmRunIdleCommand(m_armSubsystem));
     }
 
     /**

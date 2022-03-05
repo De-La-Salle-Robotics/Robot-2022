@@ -52,6 +52,14 @@ public final class Constants {
     public static final OperatorController.Button Operator_Index_Button =
             OperatorController.Button.kB;
     public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
+    public static final OperatorController.POV Operator_Intake_Hopper_Button =
+            OperatorController.POV.kRight;
+    public static final OperatorController.POV Operator_Outtake_Hopper_Button =
+            OperatorController.POV.kLeft;
+    public static final OperatorController.Button Operator_Intake_Manual_Intake_Button =
+            OperatorController.Button.kLeftBumper;
+    public static final OperatorController.Button Operator_Intake_Manual_Outtake_Button =
+            OperatorController.Button.kRightBumper;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
@@ -61,9 +69,9 @@ public final class Constants {
     public static final double Drivetrain_Gearing = 10.71;
 
     /* Arm Constants */
-    public static final double Stowed_Position = 90;
-    public static final double Indexing_Position = 70;
-    public static final double Collecting_Position = 10;
-    public static final double Arm_Gearbox_Ratio = 25.0 / 1.0;
-    public static final double Arm_Magnet_Offset = 125.0;
+    public static final double Stowed_Position = 0;
+    public static final double Indexing_Position = 20;
+    public static final double Collecting_Position = 90;
+    public static final double Arm_Gearbox_Ratio = 70.0 / 1.0;
+    public static final double Arm_Magnet_Offset = 120.0;
 }

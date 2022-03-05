@@ -12,14 +12,16 @@ public class OperatorController extends GenericHID {
     public enum Button {
         kLeftBumper(5),
         kRightBumper(6),
-        kLeftStick(9),
-        kRightStick(10),
-        kA(1),
-        kB(2),
-        kX(3),
+        kLeftTrigger(7),
+        kRightTrigger(8),
+        kLeftStick(11),
+        kRightStick(12),
+        kA(2),
+        kB(3),
+        kX(1),
         kY(4),
-        kBack(7),
-        kStart(8);
+        kBack(9),
+        kStart(10);
 
         @SuppressWarnings("MemberName")
         public final int value;
@@ -32,11 +34,9 @@ public class OperatorController extends GenericHID {
     /** Represents an axis. */
     public enum Axis {
         kLeftX(0),
-        kRightX(4),
+        kRightX(2),
         kLeftY(1),
-        kRightY(5),
-        kLeftTrigger(2),
-        kRightTrigger(3);
+        kRightY(3);
 
         @SuppressWarnings("MemberName")
         public final int value;

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
 
@@ -35,6 +36,8 @@ public class HopperSubsystem extends SubsystemBase {
 
     public void runHopper(HopperState state) {
         m_hopperState = state;
+        m_lowerHopper.setInverted(TalonFXInvertType.Clockwise);
+        m_upperHopper.setInverted(TalonFXInvertType.CounterClockwise);
     }
 
     @Override
