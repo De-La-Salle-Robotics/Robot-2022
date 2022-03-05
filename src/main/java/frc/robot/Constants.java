@@ -17,9 +17,9 @@ import frc.pilotlib.controllerwrappers.OperatorController;
 */
 public final class Constants {
     /* Drivetrain CAN IDs */
-    public static final int Right_Leader_ID = 1;
+    public static final int Right_Leader_ID = 4;
     public static final int Left_Leader_ID = 2;
-    public static final int Right_Follower_ID = 4;
+    public static final int Right_Follower_ID = 8;
     public static final int Left_Follower_ID = 3;
     public static final boolean Left_Side_Inverted = true;
     public static final boolean Right_Side_Inverted = false;
@@ -27,16 +27,16 @@ public final class Constants {
     public static final int Pigeon_ID = 0;
 
     /* Arm CAN IDs */
-    public static final int Arm_Pivot_ID = 5;
-    public static final int Arm_Cancoder_ID = 5;
-    public static final int Arm_Intake1_ID = 6;
-    public static final int Arm_Intake2_ID = 6;
+    public static final int Arm_Pivot_ID = 7;
+    public static final int Arm_Cancoder_ID = 20;
+    public static final int Arm_Intake1_ID = 9;
+    public static final int Arm_Intake2_ID = 5;
     /* ARM GPIO IDs */
-    public static final int Ball_Detect_Input_ID = 0;
+    public static final int Ball_Detect_Input_ID = 15;
 
     /* Hopper CAN IDs */
-    public static final int Lower_Hopper_ID = 7;
-    public static final int Upper_Hopper_ID = 8;
+    public static final int Lower_Hopper_ID = 0;
+    public static final int Upper_Hopper_ID = 10;
 
     /* Joystick IDs */
     public static final int Driver_Controller_Port = 0;
