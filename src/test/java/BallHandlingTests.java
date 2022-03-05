@@ -137,10 +137,10 @@ public class BallHandlingTests {
         assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Collecting_Position), 10);
         assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
         assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
-        assertEquals(intakeFx1.getMotorOutputPercent(), 0.5, 0.1);
-        assertEquals(intakeFx2.getMotorOutputPercent(), 0.5, 0.1);
-        assertEquals(lowerHopper.getMotorOutputPercent(), 0, 0.01);
-        assertEquals(upperHopper.getMotorOutputPercent(), 0, 0.01);
+        assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Idle_Speed, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Idle_Speed, 0.01);
 
         /* Now detect the ball and verify the arm stops running and moves to index */
         ballDetectSim.setValue(false); // We have a ball now
@@ -152,10 +152,10 @@ public class BallHandlingTests {
         assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Indexing_Position), 10);
         assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
         assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
-        assertEquals(intakeFx1.getMotorOutputPercent(), 0, 0.1);
-        assertEquals(intakeFx2.getMotorOutputPercent(), 0, 0.1);
-        assertEquals(lowerHopper.getMotorOutputPercent(), 0, 0.01);
-        assertEquals(upperHopper.getMotorOutputPercent(), 0, 0.01);
+        assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Idle_Power, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Idle_Power, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Idle_Speed, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Idle_Speed, 0.01);
 
         /* Now set the intake to index position */
         armSim.setRawPosition((int) (Indexing_Position * 4096.0 / 360.0));
@@ -167,10 +167,10 @@ public class BallHandlingTests {
         assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Indexing_Position), 10);
         assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
         assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
-        assertEquals(intakeFx1.getMotorOutputPercent(), 0.5, 0.1);
-        assertEquals(intakeFx2.getMotorOutputPercent(), 0.5, 0.1);
-        assertEquals(lowerHopper.getMotorOutputPercent(), 1, 0.01);
-        assertEquals(upperHopper.getMotorOutputPercent(), 1, 0.01);
+        assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
+        assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
+        assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
         /* And we're done */
     }
 
