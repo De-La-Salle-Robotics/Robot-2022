@@ -72,7 +72,7 @@ public final class Constants {
     /* Arm Constants */
     public static final double Stowed_Position = 0;
     public static final double Indexing_Position = 20;
-    public static final double Collecting_Position = 90;
+    public static final double Collecting_Position = 100;
     public static final double Arm_Gearbox_Ratio = 35.0 / 1.0;
     public static final double Arm_Magnet_Offset = 130.0;
 }

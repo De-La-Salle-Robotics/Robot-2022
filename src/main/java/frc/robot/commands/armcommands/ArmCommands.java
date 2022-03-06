@@ -35,6 +35,10 @@ public class ArmCommands {
         return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Collect), armSubsystem);
     }
 
+    public static Command getArmIndexIntakeCommand(ArmSubsystem armSubsystem) {
+        return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Index), armSubsystem);
+    }
+
     public static Command getArmRunOuttakeCommand(ArmSubsystem armSubsystem) {
         return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Spit), armSubsystem);
     }
@@ -71,13 +75,13 @@ public class ArmCommands {
                         /* Then, run the intake to put the ball in the hopper */
                         new RunCommand(
                                         () -> {
-                                            armSubsystem.runIntake(IntakeState.Collect);
+                                            armSubsystem.runIntake(IntakeState.Index);
                                             hopperSubsystem.runHopper(HopperState.Intake);
                                         },
                                         armSubsystem,
                                         hopperSubsystem)
-                                /* For a second */
-                                .withTimeout(1),
+                                /* For a bit */
+                                .withTimeout(0.2),
                         /* Then stop the hopper */
                         new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem))
                 /* Once it's done, repeat it */

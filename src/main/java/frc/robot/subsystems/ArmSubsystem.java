@@ -16,6 +16,7 @@ import frc.robot.configurations.ArmConfiguration;
 
 public class ArmSubsystem extends SubsystemBase {
     public static final double Collect_Power = 0.2;
+    public static final double Index_Power = 0.6;
     public static final double Spit_Power = -0.5;
     public static final double Idle_Power = 0;
     public static final double Angle_Threshold = 4;
@@ -66,6 +67,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public enum IntakeState {
         Collect,
+        Index,
         Spit,
         Idle,
     }
@@ -125,6 +127,10 @@ public class ArmSubsystem extends SubsystemBase {
             case Collect:
                 m_intakeMotor1.set(ControlMode.PercentOutput, Collect_Power);
                 m_intakeMotor2.set(ControlMode.PercentOutput, Collect_Power);
+                break;
+            case Index:
+                m_intakeMotor1.set(ControlMode.PercentOutput, Index_Power);
+                m_intakeMotor2.set(ControlMode.PercentOutput, Index_Power);
                 break;
             case Spit:
                 m_intakeMotor1.set(ControlMode.PercentOutput, Spit_Power);

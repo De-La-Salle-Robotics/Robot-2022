@@ -55,7 +55,7 @@ public class BallHandlingTests {
     @Test
     public void testManualMode() {
         double busV = 12;
-        double dutyCycle = 0.4;
+        double dutyCycle = 0.1;
         m_armSubsystem.manualControl(dutyCycle);
         m_armSubsystem.periodic();
         var fxSim = armFx.getSimCollection();
@@ -167,8 +167,8 @@ public class BallHandlingTests {
         assertEquals(armFx.getClosedLoopTarget(), ArmSubsystem.angleToNative(Indexing_Position), 10);
         assertEquals(intakeFx1.getControlMode(), ControlMode.PercentOutput);
         assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
-        assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
-        assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Collect_Power, 0.1);
+        assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Index_Power, 0.1);
+        assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Index_Power, 0.1);
         assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
         assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
         /* And we're done */
