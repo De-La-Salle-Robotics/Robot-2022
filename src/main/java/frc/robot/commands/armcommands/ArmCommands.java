@@ -83,8 +83,6 @@ public class ArmCommands {
                                 /* For a bit */
                                 .withTimeout(0.2),
                         /* Then stop the hopper */
-                        new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem))
-                /* Once it's done, repeat it */
-                .perpetually();
+                        new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem));
     }
 }
