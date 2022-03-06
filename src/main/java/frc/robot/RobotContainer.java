@@ -7,6 +7,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
@@ -17,6 +18,8 @@ import frc.robot.commands.armcommands.ArmCommands;
 import frc.robot.commands.armcommands.ArmManualCommand;
 import frc.robot.commands.hoppercommands.HopperCommands;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.ClimbSubsystem.ClimbState;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 
@@ -38,6 +41,7 @@ public class RobotContainer {
     private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem();
     private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
     private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
+    private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
 
     /* Commands are created here */
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
@@ -63,10 +67,25 @@ public class RobotContainer {
                             m_operatorController.getButtonSupplier(Operator_Collect_Button),
                             ArmCommands.getArmGoToCollectCommand(m_armSubsystem)));
 
+    private final Command m_defaultClimbCOmmand =
+            new OverrideableCommand(
+                    new InstantCommand(() -> m_climbSubsystem.setClimbState(ClimbState.Idle)),
+                    m_climbSubsystem,
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_driverController.getButtonSupplier(Climb_Button),
+                            new InstantCommand(() -> m_climbSubsystem.setClimbState(ClimbState.Climbing))),
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_driverController.getButtonSupplier(Winch_Button),
+                            new InstantCommand(() -> m_climbSubsystem.setClimbState(ClimbState.Winching))),
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_driverController.getButtonSupplier(Unwinch_Button),
+                            new InstantCommand(() -> m_climbSubsystem.setClimbState(ClimbState.Unwinching))));
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         m_driveBaseSubsystem.setDefaultCommand(m_teleopDrive);
         m_armSubsystem.setDefaultCommand(m_defaultArmCommand);
+        m_climbSubsystem.setDefaultCommand(m_defaultClimbCOmmand);
 
         // Configure the button bindings
         configureButtonBindings();

@@ -87,6 +87,7 @@ public class OperatorController extends GenericHID {
             return ax > value;
         };
     }
+
     public BooleanSupplier getButtonSupplier(Button button) {
         return (new JoystickButton(this, button.value))::get;
     }
