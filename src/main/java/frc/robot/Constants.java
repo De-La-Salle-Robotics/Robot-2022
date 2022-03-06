@@ -32,7 +32,7 @@ public final class Constants {
     public static final int Arm_Intake1_ID = 9;
     public static final int Arm_Intake2_ID = 5;
     /* ARM GPIO IDs */
-    public static final int Ball_Detect_Input_ID = 15;
+    public static final int Ball_Detect_Input_ID = 0;
 
     /* Hopper CAN IDs */
     public static final int Lower_Hopper_ID = 0;
@@ -48,10 +48,11 @@ public final class Constants {
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
     public static final OperatorController.Button Operator_Collect_Button =
-            OperatorController.Button.kY;
+            OperatorController.Button.kA;
     public static final OperatorController.Button Operator_Index_Button =
             OperatorController.Button.kB;
-    public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
+    public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kY;
+    public static final OperatorController.Button Operator_Automatic_Collect_Button = OperatorController.Button.kX;
     public static final OperatorController.POV Operator_Intake_Hopper_Button =
             OperatorController.POV.kRight;
     public static final OperatorController.POV Operator_Outtake_Hopper_Button =
@@ -72,6 +73,6 @@ public final class Constants {
     public static final double Stowed_Position = 0;
     public static final double Indexing_Position = 20;
     public static final double Collecting_Position = 90;
-    public static final double Arm_Gearbox_Ratio = 70.0 / 1.0;
-    public static final double Arm_Magnet_Offset = 120.0;
+    public static final double Arm_Gearbox_Ratio = 35.0 / 1.0;
+    public static final double Arm_Magnet_Offset = 130.0;
 }

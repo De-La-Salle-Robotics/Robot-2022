@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
+import frc.pilotlib.utils.OverrideableCommand;
 import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.armcommands.ArmCommands;
@@ -45,13 +46,27 @@ public class RobotContainer {
                     m_driveBaseSubsystem,
                     m_driverController.getAxis(Throttle_Axis),
                     m_driverController.getAxis(Wheel_Axis));
-    private final ArmManualCommand m_armManualCommand =
-            new ArmManualCommand(m_armSubsystem, m_operatorController.getAxis(Manual_Arm_Axis));
+    private final Command m_defaultArmCommand =
+            new OverrideableCommand(
+                    ArmCommands.getArmDoNothingCommand(m_armSubsystem),
+                    m_armSubsystem,
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_operatorController.getThreshold(Manual_Arm_Axis, 0.1, true),
+                            new ArmManualCommand(m_armSubsystem, m_operatorController.getAxis(Manual_Arm_Axis))),
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_operatorController.getButtonSupplier(Operator_Stow_Button),
+                            ArmCommands.getArmGoToStoreCommand(m_armSubsystem)),
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_operatorController.getButtonSupplier(Operator_Index_Button),
+                            ArmCommands.getArmGoToIndexCommand(m_armSubsystem)),
+                    new OverrideableCommand.TriggerCommandPair(
+                            m_operatorController.getButtonSupplier(Operator_Collect_Button),
+                            ArmCommands.getArmGoToCollectCommand(m_armSubsystem)));
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         m_driveBaseSubsystem.setDefaultCommand(m_teleopDrive);
-        m_armSubsystem.setDefaultCommand(m_armManualCommand);
+        m_armSubsystem.setDefaultCommand(m_defaultArmCommand);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -59,19 +74,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         /* Bind the arm buttons */
-        m_operatorController
-                .getButton(Operator_Stow_Button)
-                .whenPressed(ArmCommands.getArmGoToStoreCommand(m_armSubsystem));
-        m_operatorController
-                .getButton(Operator_Index_Button)
-                .whenPressed(ArmCommands.getArmGoToIndexCommand(m_armSubsystem));
-        m_operatorController
-                .getButton(Operator_Collect_Button)
-                .whenPressed(ArmCommands.getArmGoToCollectCommand(m_armSubsystem));
 
         Trigger intakeButton = m_operatorController.getButton(Operator_Intake_Hopper_Button);
         Trigger outtakeButton = m_operatorController.getButton(Operator_Outtake_Hopper_Button);
-        Trigger automaticTrigger = m_operatorController.getButton(Operator_Collect_Button);
+        Trigger automaticTrigger = m_operatorController.getButton(Operator_Automatic_Collect_Button);
         Trigger manualIntake = m_operatorController.getButton(Operator_Intake_Manual_Intake_Button);
         Trigger manualOuttake = m_operatorController.getButton(Operator_Intake_Manual_Outtake_Button);
         automaticTrigger.whenActive(

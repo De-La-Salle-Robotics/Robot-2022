@@ -27,6 +27,10 @@ public class ArmCommands {
                 () -> armSubsystem.automaticControl(ArmPosition.Stowed), armSubsystem);
     }
 
+    public static Command getArmDoNothingCommand(ArmSubsystem armSubsystem) {
+        return new InstantCommand(() -> armSubsystem.doNothing(), armSubsystem);
+    }
+
     public static Command getArmRunIntakeCommand(ArmSubsystem armSubsystem) {
         return new InstantCommand(() -> armSubsystem.runIntake(IntakeState.Collect), armSubsystem);
     }

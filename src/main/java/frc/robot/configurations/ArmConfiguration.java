@@ -41,8 +41,11 @@ public class ArmConfiguration {
         armConfig.supplyCurrLimit.currentLimit = 30;
         armConfig.supplyCurrLimit.triggerThresholdCurrent = 30;
         armConfig.supplyCurrLimit.triggerThresholdTime = 0;
+        armConfig.peakOutputForward = 0.2;
+        armConfig.peakOutputReverse = -0.2;
 
-        armConfig.slot0.kP = 0.1;
+        armConfig.slot0.kP = 0.5;
+        armConfig.slot0.kD = 3;
         armConfig.slot0.closedLoopPeakOutput = 0.3;
 
         armMotor.configAllSettings(armConfig);

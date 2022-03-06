@@ -15,7 +15,7 @@ import frc.pilotlib.wpiwrappers.PilotDigitalInput;
 import frc.robot.configurations.ArmConfiguration;
 
 public class ArmSubsystem extends SubsystemBase {
-    public static final double Collect_Power = 0.675;
+    public static final double Collect_Power = 0.2;
     public static final double Spit_Power = -0.5;
     public static final double Idle_Power = 0;
     public static final double Angle_Threshold = 4;
@@ -100,6 +100,15 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void runIntake(IntakeState intakeState) {
         m_intakeState = intakeState;
+    }
+
+    public void doNothing() {
+        if (m_currentState == ArmState.Automatic) {
+            /* Continue position */
+        } else if (m_currentState == ArmState.Manual) {
+            /* Zero manual output */
+            m_manualPower = 0;
+        }
     }
 
     @Override
