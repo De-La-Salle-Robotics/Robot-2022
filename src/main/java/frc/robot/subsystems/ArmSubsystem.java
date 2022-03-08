@@ -15,7 +15,7 @@ import frc.pilotlib.wpiwrappers.PilotDigitalInput;
 import frc.robot.configurations.ArmConfiguration;
 
 public class ArmSubsystem extends SubsystemBase {
-    public static final double Collect_Power = 0.2;
+    public static final double Collect_Power = 0.35;
     public static final double Index_Power = 0.6;
     public static final double Spit_Power = -0.5;
     public static final double Idle_Power = 0;
