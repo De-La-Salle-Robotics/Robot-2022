@@ -2,6 +2,7 @@ package frc.robot.configurations;
 
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -63,7 +64,10 @@ public class ArmConfiguration {
         intake2Motor.configAllSettings(intake2Config);
 
         armMotor.enableVoltageCompensation(true);
-        armMotor.setSelectedSensorPosition(
-                ArmSubsystem.angleToNative(armCoder.getAbsolutePosition()), 0, 100);
+        double armCoderPosition;
+        do {
+            armCoderPosition = armCoder.getAbsolutePosition();
+        } while (armCoder.getLastError() != ErrorCode.OK);
+        armMotor.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoderPosition), 0, 100);
     }
 }

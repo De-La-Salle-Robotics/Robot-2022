@@ -10,11 +10,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.robot.configurations.ClimbConfiguration;
 
 public class ClimbSubsystem extends SubsystemBase {
-    public static final double Winch_Power = 0.2;
-    public static final double Climb_Power = 0.3;
-    public static final double Unwinch_Power = -0.2;
+    public static final double Winch_Power = 1;
+    public static final double Climb_Power = 1.0;
+    public static final double Unwinch_Power = -1;
     public static final double Idle_Power = 0;
 
     private final PilotFX m_winchMotor = new PilotFX(Winch_ID);
@@ -28,7 +29,7 @@ public class ClimbSubsystem extends SubsystemBase {
         return m_climbMotor;
     }
 
-    private ClimbState m_currentState;
+    private ClimbState m_currentState = ClimbState.Idle;
 
     public enum ClimbState {
         Winching,
@@ -41,6 +42,8 @@ public class ClimbSubsystem extends SubsystemBase {
     public ClimbSubsystem() {
         addChild("Winch Motor", m_winchMotor);
         addChild("Climb Motor", m_climbMotor);
+
+        ClimbConfiguration.configure(m_winchMotor, m_climbMotor);
     }
 
     public void setClimbState(ClimbState state) {

@@ -75,6 +75,7 @@ public class OverrideableCommand extends CommandBase {
         }
         /* We need to execute our default command */
         m_defaultCommand.execute();
+        m_lastCommand = m_defaultCommand;
     }
 
     // Called once the command ends or is interrupted.
