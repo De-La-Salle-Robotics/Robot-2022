@@ -46,10 +46,15 @@ public class RobotContainer {
     /* Commands are created here */
     private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
     private final TeleopDriveCommand m_teleopDrive =
+
             new TeleopDriveCommand(
                     m_driveBaseSubsystem,
                     m_driverController.getAxis(Throttle_Axis),
-                    m_driverController.getAxis(Wheel_Axis));
+
+                    m_driverController.getAxis(Wheel_Axis) , 
+                    
+                    m_driverController.getButtonSupplier(Slowdown_Button));
+
     private final Command m_defaultArmCommand =
             new OverrideableCommand(
                     ArmCommands.getArmDoNothingCommand(m_armSubsystem),

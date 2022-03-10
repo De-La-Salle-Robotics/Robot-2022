@@ -81,7 +81,7 @@ public class ArmCommands {
                                 armSubsystem,
                                 hopperSubsystem)
                         /* For a bit */
-                        .withTimeout(0.2),
+                        .withTimeout(.165),
                 /* Then stop the hopper */
                 new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem));
     }
