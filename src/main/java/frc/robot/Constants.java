@@ -54,11 +54,7 @@ public final class Constants {
     public static final DriverController.Button Unwinch_Button = DriverController.Button.kX;
     public static final DriverController.Button Climb_Button = DriverController.Button.kY;
 
-
-    public static final DriverController.Button 
-        Slowdown_Button =
-        DriverController.Button.kLeftBumper;
-        
+    public static final DriverController.Button Slowdown_Button = DriverController.Button.kLeftBumper;
 
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
@@ -87,7 +83,7 @@ public final class Constants {
 
     /* Arm Constants */
     public static final double Stowed_Position = 5;
-    public static final double Indexing_Position = 20;
+    public static final double Indexing_Position = 17;
     public static final double Collecting_Position = 100;
     public static final double Arm_Gearbox_Ratio = 35.0 / 1.0;
     public static final double Arm_Magnet_Offset = 130.0;

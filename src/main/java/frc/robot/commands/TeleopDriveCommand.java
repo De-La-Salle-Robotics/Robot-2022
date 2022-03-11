@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -14,14 +13,16 @@ public class TeleopDriveCommand extends CommandBase {
     private final DoubleSupplier m_turn;
     private final BooleanSupplier m_slowdown;
 
-
     /**
     * Creates a new ExampleCommand.
     *
     * @param subsystem The subsystem used by this command.
     */
     public TeleopDriveCommand(
-            DriveBaseSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier turn, BooleanSupplier slowdownButton) {
+            DriveBaseSubsystem subsystem,
+            DoubleSupplier throttle,
+            DoubleSupplier turn,
+            BooleanSupplier slowdownButton) {
         m_drivetrain = subsystem;
         m_throttle = throttle;
         m_turn = turn;
@@ -40,13 +41,10 @@ public class TeleopDriveCommand extends CommandBase {
     public void execute() {
         double throttle = m_throttle.getAsDouble();
         double turn = m_turn.getAsDouble();
-        turn*=0.65;
-        throttle*=0.75;
-    
+        turn *= 0.65;
+        throttle *= 0.75;
 
-
-        
-        if(m_slowdown.getAsBoolean()) {
+        if (m_slowdown.getAsBoolean()) {
             throttle *= Slowdown_Ratio;
             turn *= Slowdown_Ratio;
         }

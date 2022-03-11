@@ -8,12 +8,14 @@ import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
 import frc.pilotlib.utils.OverrideableCommand;
-import frc.robot.commands.TaxiAutoCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.TimedDrive;
 import frc.robot.commands.armcommands.ArmCommands;
 import frc.robot.commands.armcommands.ArmManualCommand;
 import frc.robot.commands.hoppercommands.HopperCommands;
@@ -22,6 +24,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ClimbSubsystem.ClimbState;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.HopperSubsystem.HopperState;
 
 ;
 
@@ -44,15 +47,20 @@ public class RobotContainer {
     private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
 
     /* Commands are created here */
-    private final TaxiAutoCommand m_defaultAutoCommand = new TaxiAutoCommand(m_driveBaseSubsystem);
+    private final Command m_defaultAutoCommand =
+            new SequentialCommandGroup(
+                    new InstantCommand(
+                            () -> m_hopperSubsystem.runHopper(HopperState.Intake), m_hopperSubsystem),
+                    new WaitCommand(2),
+                    new InstantCommand(
+                            () -> m_hopperSubsystem.runHopper(HopperState.Idle), m_hopperSubsystem),
+                    /* Drive straight at half power for 1 second */
+                    new TimedDrive(m_driveBaseSubsystem, -0.5, 0, 4.0));
     private final TeleopDriveCommand m_teleopDrive =
-
             new TeleopDriveCommand(
                     m_driveBaseSubsystem,
                     m_driverController.getAxis(Throttle_Axis),
-
-                    m_driverController.getAxis(Wheel_Axis) , 
-                    
+                    m_driverController.getAxis(Wheel_Axis),
                     m_driverController.getButtonSupplier(Slowdown_Button));
 
     private final Command m_defaultArmCommand =

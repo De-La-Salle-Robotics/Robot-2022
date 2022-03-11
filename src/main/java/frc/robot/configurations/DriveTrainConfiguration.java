@@ -15,7 +15,6 @@ public class DriveTrainConfiguration {
 
         TalonFXConfiguration toConfigure = new TalonFXConfiguration();
         toConfigure.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-        
 
         /* TODO: Update velocity window to make them smoother */
         toConfigure.velocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_1Ms;

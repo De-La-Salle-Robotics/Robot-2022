@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
 
 public class HopperSubsystem extends SubsystemBase {
-    public static final double Intake_Speed = 1;
-    public static final double Outtake_Speed = -1;
+    public static final double Intake_Speed = 0.6;
+    public static final double Outtake_Speed = -0.5;
     public static final double Idle_Speed = 0;
 
     private PilotFX m_lowerHopper = new PilotFX(Lower_Hopper_ID);

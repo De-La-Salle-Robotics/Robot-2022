@@ -74,15 +74,11 @@ public class ArmCommands {
                         .withInterrupt(armSubsystem::isIndexed),
                 /* Then, run the intake to put the ball in the hopper */
                 new RunCommand(
-                                () -> {
-                                    armSubsystem.runIntake(IntakeState.Index);
-                                    hopperSubsystem.runHopper(HopperState.Intake);
-                                },
-                                armSubsystem,
-                                hopperSubsystem)
-                        /* For a bit */
-                        .withTimeout(.165),
-                /* Then stop the hopper */
-                new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem));
+                        () -> {
+                            armSubsystem.runIntake(IntakeState.Index);
+                            hopperSubsystem.runHopper(HopperState.Intake);
+                        },
+                        armSubsystem,
+                        hopperSubsystem));
     }
 }
