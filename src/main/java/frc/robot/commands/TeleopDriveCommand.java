@@ -6,7 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class TeleopDriveCommand extends CommandBase {
-    private final double Slowdown_Ratio = 0.25;
+    private final double Slowdown_Ratio = 0.4;
 
     private final DriveBaseSubsystem m_drivetrain;
     private final DoubleSupplier m_throttle;
@@ -41,8 +41,8 @@ public class TeleopDriveCommand extends CommandBase {
     public void execute() {
         double throttle = m_throttle.getAsDouble();
         double turn = m_turn.getAsDouble();
-        turn *= 0.65;
-        throttle *= 0.75;
+        turn *= 0.55;
+        throttle *= 0.65;
 
         if (m_slowdown.getAsBoolean()) {
             throttle *= Slowdown_Ratio;

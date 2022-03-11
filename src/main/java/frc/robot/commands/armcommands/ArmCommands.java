@@ -74,11 +74,36 @@ public class ArmCommands {
                         .withInterrupt(armSubsystem::isIndexed),
                 /* Then, run the intake to put the ball in the hopper */
                 new RunCommand(
-                        () -> {
-                            armSubsystem.runIntake(IntakeState.Index);
-                            hopperSubsystem.runHopper(HopperState.Intake);
-                        },
-                        armSubsystem,
-                        hopperSubsystem));
+                                () -> {
+                                    armSubsystem.runIntake(IntakeState.Index);
+                                    hopperSubsystem.runHopper(HopperState.Intake);
+                                },
+                                armSubsystem,
+                                hopperSubsystem)
+                        .withTimeout(0.2),
+                new InstantCommand(() -> hopperSubsystem.runHopper(HopperState.Idle), hopperSubsystem));
+    }
+
+    public static Command getArmAutomaticCollectNoIndex(
+            ArmSubsystem armSubsystem, HopperSubsystem hopperSubsystem) {
+        /* Execute these commands in sequence */
+        return new SequentialCommandGroup(
+                /* Do the following */
+                new RunCommand(
+                                () -> {
+                                    armSubsystem.automaticControl(ArmPosition.Collecting);
+                                    armSubsystem.runIntake(IntakeState.Collect);
+                                },
+                                armSubsystem)
+                        /* Until we have a ball */
+                        .withInterrupt(armSubsystem::hasBall),
+                /* Then, move the arm to the index position */
+                new RunCommand(
+                                () -> {
+                                    armSubsystem.automaticControl(ArmPosition.Indexing);
+                                    armSubsystem.runIntake(IntakeState.Idle);
+                                })
+                        /* Until it's at the index position */
+                        .withInterrupt(armSubsystem::isIndexed));
     }
 }

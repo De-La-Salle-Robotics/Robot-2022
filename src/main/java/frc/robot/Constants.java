@@ -73,6 +73,8 @@ public final class Constants {
             OperatorController.Button.kRightBumper;
     public static final OperatorController.Button Operator_Intake_Manual_Outtake_Button =
             OperatorController.Button.kLeftBumper;
+    public static final OperatorController.Button Operator_Automatic_Collect_No_Index_Button =
+            OperatorController.Button.kX;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;

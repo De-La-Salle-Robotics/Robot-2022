@@ -9,10 +9,10 @@ public class ClimbConfiguration {
         TalonFXConfiguration winchConfig = new TalonFXConfiguration();
 
         winchConfig.voltageCompSaturation = 12.0;
-        winchConfig.peakOutputForward = 0.2;
+        winchConfig.peakOutputForward = 1;
         winchConfig.statorCurrLimit.currentLimit = 10;
-        winchConfig.statorCurrLimit.triggerThresholdCurrent = 10;
-        winchConfig.statorCurrLimit.triggerThresholdTime = 0;
+        winchConfig.statorCurrLimit.triggerThresholdCurrent = 50;
+        winchConfig.statorCurrLimit.triggerThresholdTime = 0.3;
         winchConfig.statorCurrLimit.enable = true;
 
         winchMotor.configAllSettings(winchConfig);
