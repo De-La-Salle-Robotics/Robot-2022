@@ -177,7 +177,7 @@ public class RobotContainer {
 
         NetworkTableEntry playMusic = m_musicTab.add("Play Music", false).getEntry();
         NetworkButton playMusicButton = new NetworkButton(playMusic);
-        playMusicButton.whenPressed(m_musicCommand);
+        playMusicButton.whileActiveContinuous(m_musicCommand);
     }
 
     /**
