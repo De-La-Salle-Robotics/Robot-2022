@@ -2,12 +2,14 @@ package frc.robot.configurations;
 
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 import frc.robot.subsystems.ArmSubsystem;
@@ -16,10 +18,23 @@ public class ArmConfiguration {
     public static void configure(
             TalonFX armMotor, TalonFX intake1Motor, TalonFX intake2Motor, CANCoder armCoder) {
 
+        /**
+        * CANcoder is config'd first so it has time to send its position frame which is used at the end
+        * of the configure method
+        */
+        CANCoderConfiguration coderConfig = new CANCoderConfiguration();
+        coderConfig.magnetOffsetDegrees = Arm_Magnet_Offset;
+        coderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+        coderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        coderConfig.unitString = "deg";
+
+        armCoder.configAllSettings(coderConfig);
+        armCoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
+        armCoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 250);
+
         TalonFXConfiguration armConfig = new TalonFXConfiguration();
         armConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
-        /* TODO: Update velocity window to make them smoother */
         armConfig.velocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_1Ms;
         armConfig.velocityMeasurementWindow = 1;
 
@@ -27,6 +42,12 @@ public class ArmConfiguration {
         armConfig.supplyCurrLimit.currentLimit = 30;
         armConfig.supplyCurrLimit.triggerThresholdCurrent = 30;
         armConfig.supplyCurrLimit.triggerThresholdTime = 0;
+        armConfig.peakOutputForward = 0.2;
+        armConfig.peakOutputReverse = -0.2;
+
+        armConfig.slot0.kP = 0.5;
+        armConfig.slot0.kD = 3;
+        armConfig.slot0.closedLoopPeakOutput = 0.3;
 
         armMotor.configAllSettings(armConfig);
 
@@ -42,15 +63,11 @@ public class ArmConfiguration {
         intake2Config.supplyCurrLimit.triggerThresholdTime = 0;
         intake2Motor.configAllSettings(intake2Config);
 
-        CANCoderConfiguration coderConfig = new CANCoderConfiguration();
-        coderConfig.magnetOffsetDegrees = Arm_Magnet_Offset;
-        coderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
-        coderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        coderConfig.unitString = "deg";
-
-        armCoder.configAllSettings(coderConfig);
-
         armMotor.enableVoltageCompensation(true);
-        armMotor.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoder.getAbsolutePosition()));
+        double armCoderPosition;
+        do {
+            armCoderPosition = armCoder.getAbsolutePosition();
+        } while (armCoder.getLastError() != ErrorCode.OK);
+        armMotor.setSelectedSensorPosition(ArmSubsystem.angleToNative(armCoderPosition), 0, 100);
     }
 }

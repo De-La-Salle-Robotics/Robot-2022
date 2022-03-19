@@ -14,6 +14,6 @@ public class PilotCoder extends WPI_CANCoder {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        super.initSendable(builder);
+        builder.addDoubleProperty("Position", this::getAbsolutePosition, null);
     }
 }

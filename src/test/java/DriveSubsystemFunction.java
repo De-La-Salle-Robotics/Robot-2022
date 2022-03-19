@@ -42,6 +42,10 @@ public class DriveSubsystemFunction {
         leftSim.setBusVoltage(busV);
         rightSim.setBusVoltage(busV);
 
+        /* Wait for ramping to take affect */
+        waitForUpdate();
+        waitForUpdate();
+        waitForUpdate();
         waitForUpdate();
 
         double expectedLeft = busV * (throt - turn);

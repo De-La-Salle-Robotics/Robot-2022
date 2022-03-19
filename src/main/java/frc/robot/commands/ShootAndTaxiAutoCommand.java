@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveBaseSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class TaxiAutoCommand extends SequentialCommandGroup {
-    public TaxiAutoCommand(DriveBaseSubsystem driveBaseSubsystem) {
+public class ShootAndTaxiAutoCommand extends SequentialCommandGroup {
+    public ShootAndTaxiAutoCommand(
+            DriveBaseSubsystem driveBaseSubsystem, HopperSubsystem hopperSubsystem) {
         addCommands(
-                /* Drive straight at half power for 1 second */
-                new TimedDrive(driveBaseSubsystem, 0.5, 0, 1.0)
                 /* If there's any more add them here */
                 );
     }

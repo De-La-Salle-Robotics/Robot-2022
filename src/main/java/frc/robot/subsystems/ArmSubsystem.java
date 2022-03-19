@@ -15,10 +15,11 @@ import frc.pilotlib.wpiwrappers.PilotDigitalInput;
 import frc.robot.configurations.ArmConfiguration;
 
 public class ArmSubsystem extends SubsystemBase {
-    private static final double Collect_Power = 0.5;
-    private static final double Spit_Power = -0.5;
-    private static final double Idle_Power = 0;
-    private static final double Angle_Threshold = 4;
+    public static final double Collect_Power = 0.4;
+    public static final double Index_Power = 0.6;
+    public static final double Spit_Power = -0.5;
+    public static final double Idle_Power = 0;
+    public static final double Angle_Threshold = 4;
 
     private final PilotFX m_armMotor = new PilotFX(Arm_Pivot_ID);
     private final PilotFX m_intakeMotor1 = new PilotFX(Arm_Intake1_ID);
@@ -66,6 +67,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public enum IntakeState {
         Collect,
+        Index,
         Spit,
         Idle,
     }
@@ -102,6 +104,15 @@ public class ArmSubsystem extends SubsystemBase {
         m_intakeState = intakeState;
     }
 
+    public void doNothing() {
+        if (m_currentState == ArmState.Automatic) {
+            /* Continue position */
+        } else if (m_currentState == ArmState.Manual) {
+            /* Zero manual output */
+            m_manualPower = 0;
+        }
+    }
+
     @Override
     public void periodic() {
         switch (m_currentState) {
@@ -109,23 +120,17 @@ public class ArmSubsystem extends SubsystemBase {
                 m_armMotor.set(ControlMode.PercentOutput, m_manualPower);
                 break;
             case Automatic:
-                switch (m_currentPosition) {
-                    case Stowed:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Stowed_Position));
-                        break;
-                    case Indexing:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Indexing_Position));
-                        break;
-                    case Collecting:
-                        m_armMotor.set(ControlMode.Position, angleToNative(Collecting_Position));
-                        break;
-                }
+                m_armMotor.set(ControlMode.Position, getNativeTarget());
                 break;
         }
         switch (m_intakeState) {
             case Collect:
                 m_intakeMotor1.set(ControlMode.PercentOutput, Collect_Power);
                 m_intakeMotor2.set(ControlMode.PercentOutput, Collect_Power);
+                break;
+            case Index:
+                m_intakeMotor1.set(ControlMode.PercentOutput, Index_Power);
+                m_intakeMotor2.set(ControlMode.PercentOutput, Index_Power);
                 break;
             case Spit:
                 m_intakeMotor1.set(ControlMode.PercentOutput, Spit_Power);
@@ -154,5 +159,17 @@ public class ArmSubsystem extends SubsystemBase {
         double cancoderRots = armAngle / 360.0;
         /* Apply gear ratio */
         return PilotFX.toRawUnits(cancoderRots * Arm_Gearbox_Ratio);
+    }
+
+    public double getNativeTarget() {
+        switch (m_currentPosition) {
+            case Stowed:
+                return angleToNative(Stowed_Position);
+            case Indexing:
+                return angleToNative(Indexing_Position);
+            case Collecting:
+                return angleToNative(Collecting_Position);
+        }
+        return -7762;
     }
 }

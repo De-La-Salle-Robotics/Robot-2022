@@ -3,6 +3,7 @@ package frc.pilotlib.controllerwrappers;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 /** 7762's Driver Controller is a logitech F310 in X-input mode. */
@@ -74,5 +75,9 @@ public class DriverController extends GenericHID {
 
     public POVButton getButton(POV pov) {
         return new POVButton(this, pov.value);
+    }
+
+    public BooleanSupplier getButtonSupplier(Button button) {
+        return (new JoystickButton(this, button.value))::get;
     }
 }

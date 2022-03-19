@@ -17,9 +17,9 @@ import frc.pilotlib.controllerwrappers.OperatorController;
 */
 public final class Constants {
     /* Drivetrain CAN IDs */
-    public static final int Right_Leader_ID = 1;
+    public static final int Right_Leader_ID = 4;
     public static final int Left_Leader_ID = 2;
-    public static final int Right_Follower_ID = 4;
+    public static final int Right_Follower_ID = 8;
     public static final int Left_Follower_ID = 3;
     public static final boolean Left_Side_Inverted = true;
     public static final boolean Right_Side_Inverted = false;
@@ -27,16 +27,20 @@ public final class Constants {
     public static final int Pigeon_ID = 0;
 
     /* Arm CAN IDs */
-    public static final int Arm_Pivot_ID = 5;
-    public static final int Arm_Cancoder_ID = 5;
-    public static final int Arm_Intake1_ID = 6;
-    public static final int Arm_Intake2_ID = 6;
+    public static final int Arm_Pivot_ID = 7;
+    public static final int Arm_Cancoder_ID = 20;
+    public static final int Arm_Intake1_ID = 9;
+    public static final int Arm_Intake2_ID = 5;
     /* ARM GPIO IDs */
     public static final int Ball_Detect_Input_ID = 0;
 
     /* Hopper CAN IDs */
-    public static final int Lower_Hopper_ID = 7;
-    public static final int Upper_Hopper_ID = 8;
+    public static final int Lower_Hopper_ID = 0;
+    public static final int Upper_Hopper_ID = 10;
+
+    /* Climb CAN IDs */
+    public static final int Winch_ID = 15;
+    public static final int Climb_ID = 16;
 
     /* Joystick IDs */
     public static final int Driver_Controller_Port = 0;
@@ -45,6 +49,14 @@ public final class Constants {
     /* Driver Joystick constants */
     public static final DriverController.Axis Throttle_Axis = DriverController.Axis.kLeftY;
     public static final DriverController.Axis Wheel_Axis = DriverController.Axis.kRightX;
+
+    public static final DriverController.Button Winch_Button = DriverController.Button.kB;
+    public static final DriverController.Button Unwinch_Button = DriverController.Button.kX;
+    public static final DriverController.Button Climb_Button = DriverController.Button.kY;
+
+    public static final DriverController.Button Slowdown_Button = DriverController.Button.kLeftBumper;
+    public static final DriverController.Button Speedup_Button = DriverController.Button.kRightBumper;
+
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;
     public static final OperatorController.Button Operator_Collect_Button =
@@ -52,6 +64,18 @@ public final class Constants {
     public static final OperatorController.Button Operator_Index_Button =
             OperatorController.Button.kB;
     public static final OperatorController.Button Operator_Stow_Button = OperatorController.Button.kA;
+    public static final OperatorController.Button Operator_Automatic_Collect_Button =
+            OperatorController.Button.kLeftTrigger;
+    public static final OperatorController.Button Operator_Intake_Hopper_Button =
+            OperatorController.Button.kRightTrigger;
+    public static final OperatorController.Button Operator_Outtake_Hopper_Button =
+            OperatorController.Button.kStart;
+    public static final OperatorController.Button Operator_Intake_Manual_Intake_Button =
+            OperatorController.Button.kRightBumper;
+    public static final OperatorController.Button Operator_Intake_Manual_Outtake_Button =
+            OperatorController.Button.kLeftBumper;
+    public static final OperatorController.Button Operator_Automatic_Collect_No_Index_Button =
+            OperatorController.Button.kX;
 
     /* Distance between left wheels and right wheels in inches */
     public static final double Robot_Width = 18.0;
@@ -61,9 +85,9 @@ public final class Constants {
     public static final double Drivetrain_Gearing = 10.71;
 
     /* Arm Constants */
-    public static final double Stowed_Position = 90;
-    public static final double Indexing_Position = 70;
-    public static final double Collecting_Position = 10;
-    public static final double Arm_Gearbox_Ratio = 25.0 / 1.0;
-    public static final double Arm_Magnet_Offset = 125.0;
+    public static final double Stowed_Position = 5;
+    public static final double Indexing_Position = 17;
+    public static final double Collecting_Position = 100;
+    public static final double Arm_Gearbox_Ratio = 35.0 / 1.0;
+    public static final double Arm_Magnet_Offset = 130.0;
 }

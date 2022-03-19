@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
 
 public class HopperSubsystem extends SubsystemBase {
-    private final double Intake_Speed = 1;
-    private final double Outtake_Speed = -1;
+    public static final double Intake_Speed = 0.5;
+    public static final double Outtake_Speed = -0.5;
+    public static final double Idle_Speed = 0;
 
     private PilotFX m_lowerHopper = new PilotFX(Lower_Hopper_ID);
     private PilotFX m_upperHopper = new PilotFX(Upper_Hopper_ID);
@@ -34,14 +36,16 @@ public class HopperSubsystem extends SubsystemBase {
 
     public void runHopper(HopperState state) {
         m_hopperState = state;
+        m_lowerHopper.setInverted(TalonFXInvertType.Clockwise);
+        m_upperHopper.setInverted(TalonFXInvertType.CounterClockwise);
     }
 
     @Override
     public void periodic() {
         switch (m_hopperState) {
             case Idle:
-                m_lowerHopper.set(0);
-                m_upperHopper.set(0);
+                m_lowerHopper.set(Idle_Speed);
+                m_upperHopper.set(Idle_Speed);
                 break;
             case Intake:
                 m_lowerHopper.set(Intake_Speed);
