@@ -169,8 +169,8 @@ public class BallHandlingTests {
         assertEquals(intakeFx2.getControlMode(), ControlMode.PercentOutput);
         assertEquals(intakeFx1.getMotorOutputPercent(), ArmSubsystem.Index_Power, 0.1);
         assertEquals(intakeFx2.getMotorOutputPercent(), ArmSubsystem.Index_Power, 0.1);
-        assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
-        assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.01);
+        assertEquals(lowerHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.1);
+        assertEquals(upperHopper.getMotorOutputPercent(), HopperSubsystem.Intake_Speed, 0.1);
         /* And we're done */
     }
 
