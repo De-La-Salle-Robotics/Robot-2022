@@ -6,14 +6,19 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.NetworkButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.pilotlib.controllerwrappers.DriverController;
 import frc.pilotlib.controllerwrappers.OperatorController;
 import frc.pilotlib.utils.OverrideableCommand;
+import frc.robot.commands.PlayMusicCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.TimedDrive;
 import frc.robot.commands.armcommands.ArmCommands;
@@ -45,6 +50,9 @@ public class RobotContainer {
     private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
     private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
     private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
+    private final ShuffleboardTab m_musicTab = Shuffleboard.getTab("Music");
+    private final NetworkTableEntry m_fileNameGetter =
+            m_musicTab.add("Chirp File Name", "").getEntry();
 
     /* Commands are created here */
     private final Command m_defaultAutoCommand =
@@ -94,6 +102,14 @@ public class RobotContainer {
                     new OverrideableCommand.TriggerCommandPair(
                             m_driverController.getButtonSupplier(Unwinch_Button),
                             new InstantCommand(() -> m_climbSubsystem.setClimbState(ClimbState.Unwinching))));
+
+    Command m_musicCommand =
+            new PlayMusicCommand(
+                    () -> m_fileNameGetter.getString(""),
+                    m_driveBaseSubsystem,
+                    m_hopperSubsystem,
+                    m_armSubsystem,
+                    m_climbSubsystem);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -158,6 +174,10 @@ public class RobotContainer {
                 .and(automaticTrigger.negate())
                 .and(automaticNoIndexTrigger.negate())
                 .whenActive(ArmCommands.getArmRunIdleCommand(m_armSubsystem));
+
+        NetworkTableEntry playMusic = m_musicTab.add("Play Music", false).getEntry();
+        NetworkButton playMusicButton = new NetworkButton(playMusic);
+        playMusicButton.whenPressed(m_musicCommand);
     }
 
     /**

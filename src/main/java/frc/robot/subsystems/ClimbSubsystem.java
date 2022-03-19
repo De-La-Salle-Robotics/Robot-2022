@@ -7,12 +7,17 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.utils.PlayableSubsystem;
 import frc.robot.configurations.ClimbConfiguration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class ClimbSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends SubsystemBase implements PlayableSubsystem {
     public static final double Winch_Power = 1;
     public static final double Climb_Power = 1.0;
     public static final double Unwinch_Power = -1;
@@ -30,6 +35,22 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     private ClimbState m_currentState = ClimbState.Idle;
+    private boolean m_isPlaying = false;
+
+    @Override
+    public Collection<TalonFX> getPlayableDevices() {
+        List<TalonFX> talons = new ArrayList<TalonFX>();
+        talons.add(m_winchMotor);
+        return talons;
+    }
+    @Override
+    public void beginPlaying() {
+        m_isPlaying = true;
+    }
+    @Override
+    public void stopPlaying() {
+        m_isPlaying = false;
+    }
 
     public enum ClimbState {
         Winching,
@@ -57,6 +78,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if(m_isPlaying) return;
         switch (m_currentState) {
             case Idle:
                 m_climbMotor.set(ControlMode.PercentOutput, Idle_Power);

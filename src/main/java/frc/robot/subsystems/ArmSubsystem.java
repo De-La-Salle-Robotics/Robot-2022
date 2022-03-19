@@ -7,14 +7,19 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotCoder;
 import frc.pilotlib.ctrwrappers.PilotFX;
+import frc.pilotlib.utils.PlayableSubsystem;
 import frc.pilotlib.utils.RangeUtils;
 import frc.pilotlib.wpiwrappers.PilotDigitalInput;
 import frc.robot.configurations.ArmConfiguration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class ArmSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase implements PlayableSubsystem {
     public static final double Collect_Power = 0.4;
     public static final double Index_Power = 0.6;
     public static final double Spit_Power = -0.5;
@@ -53,6 +58,25 @@ public class ArmSubsystem extends SubsystemBase {
     private ArmPosition m_currentPosition;
     private double m_manualPower;
     private IntakeState m_intakeState;
+
+    private boolean m_isPlaying = false;
+
+    @Override
+    public Collection<TalonFX> getPlayableDevices() {
+        List<TalonFX> motors = new ArrayList<TalonFX>();
+        motors.add(m_armMotor);
+        motors.add(m_intakeMotor1);
+        motors.add(m_intakeMotor2);
+        return motors;
+    }
+    @Override
+    public void beginPlaying() {
+        m_isPlaying = true;
+    }
+    @Override
+    public void stopPlaying() {
+        m_isPlaying = false;
+    }
 
     private enum ArmState {
         Manual, // The arm is controlled manually through manualControl
@@ -115,6 +139,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if(m_isPlaying) return;
         switch (m_currentState) {
             case Manual:
                 m_armMotor.set(ControlMode.PercentOutput, m_manualPower);

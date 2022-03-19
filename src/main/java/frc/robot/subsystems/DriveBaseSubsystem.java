@@ -8,6 +8,7 @@ import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.BasePigeonSimCollection;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,9 +24,13 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSiz
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.pilotlib.ctrwrappers.PilotFX;
 import frc.pilotlib.ctrwrappers.PilotPigeon;
+import frc.pilotlib.utils.PlayableSubsystem;
 import frc.robot.configurations.DriveTrainConfiguration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class DriveBaseSubsystem extends SubsystemBase {
+public class DriveBaseSubsystem extends SubsystemBase implements PlayableSubsystem {
     private final PilotFX m_rightLeader = new PilotFX(Right_Leader_ID);
     private final PilotFX m_leftLeader = new PilotFX(Left_Leader_ID);
     private final PilotFX m_rightFollower = new PilotFX(Right_Follower_ID);
@@ -66,6 +71,26 @@ public class DriveBaseSubsystem extends SubsystemBase {
                     KitbotWheelSize.kSixInch,
                     null);
 
+    private boolean m_isPlaying = false;
+
+    @Override
+    public Collection<TalonFX> getPlayableDevices() {
+        List<TalonFX> talons = new ArrayList<TalonFX>();
+        talons.add(m_rightLeader);
+        talons.add(m_rightFollower);
+        talons.add(m_leftLeader);
+        talons.add(m_leftFollower);
+        return talons;
+    }
+    @Override
+    public void beginPlaying() {
+        m_isPlaying = true;
+    }
+    @Override
+    public void stopPlaying() {
+        m_isPlaying = false;
+    }
+
     /** Creates a new ExampleSubsystem. */
     public DriveBaseSubsystem() {
         addChild("Right Leader", m_rightLeader);
@@ -90,11 +115,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     public void arcadeDrive(double throttle, double turn) {
         m_rightLeader.set(ControlMode.PercentOutput, throttle + turn);
+        m_rightFollower.follow(m_rightLeader);
         m_leftLeader.set(ControlMode.PercentOutput, throttle - turn);
+        m_leftFollower.follow(m_leftFollower);
     }
 
     @Override
     public void periodic() {
+        if(m_isPlaying) return;
         /* Update the odometry */
         m_currentPose =
                 m_Odometry.update(
