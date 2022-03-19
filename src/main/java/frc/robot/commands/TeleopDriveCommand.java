@@ -12,6 +12,7 @@ public class TeleopDriveCommand extends CommandBase {
     private final DoubleSupplier m_throttle;
     private final DoubleSupplier m_turn;
     private final BooleanSupplier m_slowdown;
+    private final BooleanSupplier m_speedup;
 
     /**
     * Creates a new ExampleCommand.
@@ -22,11 +23,13 @@ public class TeleopDriveCommand extends CommandBase {
             DriveBaseSubsystem subsystem,
             DoubleSupplier throttle,
             DoubleSupplier turn,
-            BooleanSupplier slowdownButton) {
+            BooleanSupplier slowdownButton,
+            BooleanSupplier speedupButton) {
         m_drivetrain = subsystem;
         m_throttle = throttle;
         m_turn = turn;
         m_slowdown = slowdownButton;
+        m_speedup = speedupButton;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(subsystem);
@@ -41,12 +44,14 @@ public class TeleopDriveCommand extends CommandBase {
     public void execute() {
         double throttle = m_throttle.getAsDouble();
         double turn = m_turn.getAsDouble();
-        turn *= 0.55;
-        throttle *= 0.65;
+        turn *= 0.45;
+        throttle *= 0.55;
 
         if (m_slowdown.getAsBoolean()) {
             throttle *= Slowdown_Ratio;
             turn *= Slowdown_Ratio;
+        } else if (m_speedup.getAsBoolean()) {
+            throttle *= 1.7;
         }
         m_drivetrain.arcadeDrive(throttle, turn);
     }

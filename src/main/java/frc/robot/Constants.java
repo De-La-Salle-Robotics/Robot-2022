@@ -55,6 +55,7 @@ public final class Constants {
     public static final DriverController.Button Climb_Button = DriverController.Button.kY;
 
     public static final DriverController.Button Slowdown_Button = DriverController.Button.kLeftBumper;
+    public static final DriverController.Button Speedup_Button = DriverController.Button.kRightBumper;
 
     /* Operator Joystick constants */
     public static final OperatorController.Axis Manual_Arm_Axis = OperatorController.Axis.kLeftY;

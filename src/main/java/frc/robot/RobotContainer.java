@@ -61,7 +61,8 @@ public class RobotContainer {
                     m_driveBaseSubsystem,
                     m_driverController.getAxis(Throttle_Axis),
                     m_driverController.getAxis(Wheel_Axis),
-                    m_driverController.getButtonSupplier(Slowdown_Button));
+                    m_driverController.getButtonSupplier(Slowdown_Button),
+                    m_driverController.getButtonSupplier(Speedup_Button));
 
     private final Command m_defaultArmCommand =
             new OverrideableCommand(
