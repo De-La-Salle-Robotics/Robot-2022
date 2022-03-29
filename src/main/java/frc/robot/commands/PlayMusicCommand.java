@@ -37,7 +37,7 @@ public class PlayMusicCommand extends CommandBase {
         m_orchestra.loadMusic(m_songNameGetter.get());
         m_orchestra.play();
         m_isFinished = false;
-        for(PlayableSubsystem system : m_subsystems) {
+        for (PlayableSubsystem system : m_subsystems) {
             system.beginPlaying();
         }
         System.out.println("Starting to play music");
@@ -51,7 +51,7 @@ public class PlayMusicCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_orchestra.stop();
-        for(PlayableSubsystem system : m_subsystems) {
+        for (PlayableSubsystem system : m_subsystems) {
             system.stopPlaying();
         }
         System.out.println("Stopping music");

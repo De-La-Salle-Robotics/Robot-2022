@@ -82,10 +82,12 @@ public class DriveBaseSubsystem extends SubsystemBase implements PlayableSubsyst
         talons.add(m_leftFollower);
         return talons;
     }
+
     @Override
     public void beginPlaying() {
         m_isPlaying = true;
     }
+
     @Override
     public void stopPlaying() {
         m_isPlaying = false;
@@ -122,7 +124,7 @@ public class DriveBaseSubsystem extends SubsystemBase implements PlayableSubsyst
 
     @Override
     public void periodic() {
-        if(m_isPlaying) return;
+        if (m_isPlaying) return;
         /* Update the odometry */
         m_currentPose =
                 m_Odometry.update(

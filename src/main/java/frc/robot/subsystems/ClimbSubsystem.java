@@ -43,10 +43,12 @@ public class ClimbSubsystem extends SubsystemBase implements PlayableSubsystem {
         talons.add(m_winchMotor);
         return talons;
     }
+
     @Override
     public void beginPlaying() {
         m_isPlaying = true;
     }
+
     @Override
     public void stopPlaying() {
         m_isPlaying = false;
@@ -78,7 +80,7 @@ public class ClimbSubsystem extends SubsystemBase implements PlayableSubsystem {
 
     @Override
     public void periodic() {
-        if(m_isPlaying) return;
+        if (m_isPlaying) return;
         switch (m_currentState) {
             case Idle:
                 m_climbMotor.set(ControlMode.PercentOutput, Idle_Power);

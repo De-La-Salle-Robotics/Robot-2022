@@ -28,10 +28,12 @@ public class HopperSubsystem extends SubsystemBase implements PlayableSubsystem 
         talons.add(m_upperHopper);
         return talons;
     }
+
     @Override
     public void beginPlaying() {
         m_isPlaying = true;
     }
+
     @Override
     public void stopPlaying() {
         m_isPlaying = false;
@@ -64,7 +66,7 @@ public class HopperSubsystem extends SubsystemBase implements PlayableSubsystem 
 
     @Override
     public void periodic() {
-        if(m_isPlaying) return;
+        if (m_isPlaying) return;
         switch (m_hopperState) {
             case Idle:
                 m_lowerHopper.set(Idle_Speed);

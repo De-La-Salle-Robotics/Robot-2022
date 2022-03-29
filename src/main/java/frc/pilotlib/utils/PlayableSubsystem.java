@@ -6,6 +6,8 @@ import java.util.Collection;
 
 public interface PlayableSubsystem extends Subsystem {
     public Collection<TalonFX> getPlayableDevices();
+
     public void beginPlaying();
+
     public void stopPlaying();
 }

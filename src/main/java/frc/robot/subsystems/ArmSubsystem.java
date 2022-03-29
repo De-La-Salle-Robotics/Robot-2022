@@ -69,10 +69,12 @@ public class ArmSubsystem extends SubsystemBase implements PlayableSubsystem {
         motors.add(m_intakeMotor2);
         return motors;
     }
+
     @Override
     public void beginPlaying() {
         m_isPlaying = true;
     }
+
     @Override
     public void stopPlaying() {
         m_isPlaying = false;
@@ -139,7 +141,7 @@ public class ArmSubsystem extends SubsystemBase implements PlayableSubsystem {
 
     @Override
     public void periodic() {
-        if(m_isPlaying) return;
+        if (m_isPlaying) return;
         switch (m_currentState) {
             case Manual:
                 m_armMotor.set(ControlMode.PercentOutput, m_manualPower);
