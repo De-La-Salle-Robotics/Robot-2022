@@ -51,6 +51,7 @@ jobs:
 
   unit-test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
     # The type of runner that the job will run on
