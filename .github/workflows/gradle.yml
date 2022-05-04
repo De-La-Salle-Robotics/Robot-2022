@@ -55,9 +55,6 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
-    
-    # This grabs the WPILib docker container
-    container: wpilib/roborio-cross-ubuntu:2022-18.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -67,6 +64,10 @@ jobs:
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    # Install toolchain
+    - name: Install toolchain
+      run: ./gradlew installRoborioToolchain
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
